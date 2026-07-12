@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://tattookan.art/sitemap.xml
