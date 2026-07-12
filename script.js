@@ -20,13 +20,16 @@ window.addEventListener("load", function () {
 });
 document.addEventListener("DOMContentLoaded", () => {
   let tattoos = [];
+  let dailyCampaigns = [];
 
   const grid = document.getElementById("tattoo-grid");
 
   const categories = [
     { id: "all", name: "Tümü" },
+    { id: "daily-campaign", name: "🔥 Günün Kampanyaları" },
     { id: "dark-realism", name: "Dark Realism" },
     { id: "fine-line", name: "Fine Line" },
+    { id: "minimal", name: "Minimal" },
     { id: "cover-up", name: "Cover Up" },
     { id: "mandala", name: "Mandala" },
   ];
@@ -46,21 +49,207 @@ document.addEventListener("DOMContentLoaded", () => {
     filterContainer.appendChild(btn);
   });
 
+  function getDailyViews(item) {
+    const storageKey = `tattooInterest_${item.id}`;
+    const today = new Date();
+
+    // Yerel tarihle YYYY-MM-DD oluşturur
+    const todayKey = [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, "0"),
+      String(today.getDate()).padStart(2, "0"),
+    ].join("-");
+
+    const categoryRanges = {
+      "dark-realism": {
+        min: 16,
+        max: 38,
+        startMin: 140,
+        startMax: 320,
+      },
+
+      "fine-line": {
+        min: 10,
+        max: 27,
+        startMin: 100,
+        startMax: 260,
+      },
+
+      "cover-up": {
+        min: 6,
+        max: 19,
+        startMin: 70,
+        startMax: 190,
+      },
+
+      mandala: {
+        min: 8,
+        max: 23,
+        startMin: 80,
+        startMax: 220,
+      },
+      minimal: {
+        min: 8,
+        max: 23,
+        startMin: 80,
+        startMax: 220,
+      },
+    };
+
+    const range = categoryRanges[item.category] || {
+      min: 8,
+      max: 25,
+      startMin: 80,
+      startMax: 220,
+    };
+
+    function randomBetween(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function calculateDailyIncrease(date, min, max) {
+      const day = date.getDay();
+
+      let dailyMin = min;
+      let dailyMax = max;
+
+      // Cuma, cumartesi ve pazar günleri daha yüksek ilgi
+      if (day === 5 || day === 6 || day === 0) {
+        dailyMin = Math.round(min * 1.15);
+        dailyMax = Math.round(max * 1.35);
+      }
+
+      // Bazı günlerde düşük hareket
+      const activityChance = Math.random();
+
+      if (activityChance < 0.08) {
+        return 0;
+      }
+
+      if (activityChance < 0.2) {
+        dailyMin = Math.max(2, Math.round(dailyMin * 0.45));
+        dailyMax = Math.max(dailyMin, Math.round(dailyMax * 0.65));
+      }
+
+      return randomBetween(dailyMin, dailyMax);
+    }
+
+    let storedData;
+
+    try {
+      storedData = JSON.parse(localStorage.getItem(storageKey));
+    } catch (error) {
+      storedData = null;
+    }
+
+    // İlk kez oluşturuluyorsa başlangıç değeri ver
+    if (
+      !storedData ||
+      typeof storedData.total !== "number" ||
+      !storedData.lastUpdate
+    ) {
+      storedData = {
+        total: randomBetween(range.startMin, range.startMax),
+        lastUpdate: todayKey,
+      };
+
+      localStorage.setItem(storageKey, JSON.stringify(storedData));
+
+      return storedData.total;
+    }
+
+    const lastDate = new Date(`${storedData.lastUpdate}T00:00:00`);
+    const currentDate = new Date(`${todayKey}T00:00:00`);
+
+    const passedDays = Math.floor(
+      (currentDate - lastDate) / (1000 * 60 * 60 * 24),
+    );
+
+    if (passedDays > 0) {
+      for (let dayIndex = 1; dayIndex <= passedDays; dayIndex++) {
+        const calculationDate = new Date(lastDate);
+
+        calculationDate.setDate(calculationDate.getDate() + dayIndex);
+
+        storedData.total += calculateDailyIncrease(
+          calculationDate,
+          range.min,
+          range.max,
+        );
+      }
+
+      storedData.lastUpdate = todayKey;
+
+      localStorage.setItem(storageKey, JSON.stringify(storedData));
+    }
+
+    return storedData.total;
+  }
+
+  function shuffleArray(array) {
+    const shuffled = [...array];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+
+      [shuffled[i], shuffled[randomIndex]] = [
+        shuffled[randomIndex],
+        shuffled[i],
+      ];
+    }
+
+    return shuffled;
+  }
+
   // Portfolyo JSON yükleme
 
   fetch("./data/tattoos.json")
     .then((response) => response.json())
 
     .then((data) => {
-      tattoos = data;
+      // Her çalışmaya, kategorisi içindeki JSON sırasına göre sabit bir
+      // numara veriyoruz (örn. "Fine Line #11"). Bu numara tattoos.json
+      // içindeki sıraya bağlı olduğu için sayfa yenilense/karışsa bile değişmez.
+      const categoryCounters = {};
+      const numberedData = data.map((item) => {
+        categoryCounters[item.category] =
+          (categoryCounters[item.category] || 0) + 1;
+
+        return { ...item, categoryNumber: categoryCounters[item.category] };
+      });
+
+      dailyCampaigns = createDailyCampaigns(numberedData);
+
+      const campaignMap = new Map(
+        dailyCampaigns.map((item) => [String(item.id), item]),
+      );
+
+      const dataWithCampaigns = numberedData.map((item) => {
+        const campaignItem = campaignMap.get(String(item.id));
+
+        return campaignItem || item;
+      });
+
+      tattoos = shuffleArray(dataWithCampaigns);
+
+      // Kampanya kategorisindeki sıralama
+      dailyCampaigns = tattoos.filter((item) => item.isDailyCampaign === true);
 
       console.log("Yüklenen portfolyo:", tattoos);
+      console.log("Günün kampanyaları:", dailyCampaigns);
 
       renderTattoos(tattoos);
     })
 
     .catch((error) => {
       console.error("JSON yüklenemedi:", error);
+
+      grid.innerHTML = `
+        <div class="col-12 text-center text-muted py-5">
+          <i class="fas fa-triangle-exclamation text-gold mb-3" style="font-size: 2rem;"></i>
+          <p class="mb-2">Modeller şu anda yüklenemedi.</p>
+          <p class="small">Lütfen sayfayı yenileyin ya da daha sonra tekrar deneyin.</p>
+        </div>`;
     });
   const styleDescriptions = {
     "Dark Realism": "Premium Black & Grey",
@@ -70,12 +259,200 @@ document.addEventListener("DOMContentLoaded", () => {
     Mandala: "Sacred Geometry",
 
     "Cover Up": "Tattoo Transformation",
+
+    Minimal: "Clean & Simple Tattoo",
   };
 
   // Kartları oluşturma
 
+  function renderStars(rating) {
+    const value = Math.min(5, Math.max(0, Math.round(Number(rating) || 0)));
+    let starsHTML = "";
+
+    for (let i = 1; i <= 5; i++) {
+      starsHTML +=
+        i <= value
+          ? '<i class="fas fa-star"></i>'
+          : '<i class="far fa-star"></i>';
+    }
+
+    return starsHTML;
+  }
+
+  function createSeededRandom(seed) {
+    return function () {
+      seed += 0x6d2b79f5;
+
+      let value = seed;
+
+      value = Math.imul(value ^ (value >>> 15), value | 1);
+      value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+
+      return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function getCampaignRate(price, randomValue) {
+    let minRate;
+    let maxRate;
+
+    if (price <= 3000) {
+      minRate = 10;
+      maxRate = 15;
+    } else if (price <= 8000) {
+      minRate = 15;
+      maxRate = 20;
+    } else if (price <= 20000) {
+      minRate = 20;
+      maxRate = 23;
+    } else {
+      minRate = 23;
+      maxRate = 25;
+    }
+
+    return Math.floor(randomValue * (maxRate - minRate + 1)) + minRate;
+  }
+
+  function roundCampaignPrice(price) {
+    if (price < 5000) {
+      return Math.round(price / 50) * 50;
+    }
+
+    return Math.round(price / 100) * 100;
+  }
+
+  function createDailyCampaigns(items) {
+    const campaignCategories = [
+      "dark-realism",
+      "fine-line",
+      "minimal",
+      "cover-up",
+      "mandala",
+    ];
+
+    // Bütün cihazlarda Türkiye tarihini kullanır
+    const dateText = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/Istanbul",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date());
+
+    const dateSeed = Number(dateText.replaceAll("-", ""));
+
+    const random = createSeededRandom(dateSeed);
+    const selectedItems = [];
+    const selectedIds = new Set();
+
+    // Önce her kategoriden en az bir çalışma seç
+    campaignCategories.forEach((categoryId) => {
+      const categoryItems = items.filter(
+        (item) => item.category === categoryId,
+      );
+
+      if (categoryItems.length === 0) {
+        return;
+      }
+
+      const selectedIndex = Math.floor(random() * categoryItems.length);
+
+      const selectedItem = categoryItems[selectedIndex];
+
+      selectedItems.push(selectedItem);
+      selectedIds.add(String(selectedItem.id));
+    });
+
+    // Geriye kalan ürünlerden 10 kampanyaya tamamla
+    const remainingItems = items.filter(
+      (item) => !selectedIds.has(String(item.id)),
+    );
+
+    for (let i = remainingItems.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(random() * (i + 1));
+
+      [remainingItems[i], remainingItems[randomIndex]] = [
+        remainingItems[randomIndex],
+        remainingItems[i],
+      ];
+    }
+
+    while (selectedItems.length < 10 && remainingItems.length > 0) {
+      selectedItems.push(remainingItems.shift());
+    }
+
+    return selectedItems.map((item) => {
+      const campaignRate = getCampaignRate(Number(item.basePrice), random());
+
+      const rawCampaignPrice =
+        Number(item.basePrice) * (1 - campaignRate / 100);
+
+      const campaignPrice = roundCampaignPrice(rawCampaignPrice);
+
+      return {
+        ...item,
+        isDailyCampaign: true,
+        campaignRate,
+        campaignPrice,
+      };
+    });
+  }
+
+  function getCampaignTimeLeft() {
+    const now = new Date();
+
+    const istanbulDate = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/Istanbul",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(now);
+
+    const campaignEnd = new Date(`${istanbulDate}T23:59:59+03:00`);
+
+    const difference = campaignEnd - now;
+
+    if (difference <= 0) {
+      return {
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+      };
+    }
+
+    return {
+      hours: Math.floor(difference / (1000 * 60 * 60)),
+      minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+      seconds: Math.floor((difference % (1000 * 60)) / 1000),
+    };
+  }
+
+  function updateCampaignCountdowns() {
+    const timeLeft = getCampaignTimeLeft();
+
+    const formattedTime = [
+      String(timeLeft.hours).padStart(2, "0"),
+      String(timeLeft.minutes).padStart(2, "0"),
+      String(timeLeft.seconds).padStart(2, "0"),
+    ].join(":");
+
+    document.querySelectorAll(".campaign-countdown").forEach((element) => {
+      element.textContent = formattedTime;
+    });
+
+    if (
+      timeLeft.hours === 0 &&
+      timeLeft.minutes === 0 &&
+      timeLeft.seconds === 0
+    ) {
+      setTimeout(() => {
+        location.reload();
+      }, 1200);
+    }
+  }
+
   function renderTattoos(data) {
     grid.innerHTML = "";
+    let cardsHTML = "";
 
     if (data.length === 0) {
       grid.innerHTML = `
@@ -86,23 +463,28 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    data.forEach((item) => {
-      const discountRate = 35;
+    data.forEach((item, index) => {
+      const totalViews = getDailyViews(item);
 
-      const newPrice = item.basePrice;
+      const discountRate = Number(item.discount) || 0;
 
-      const oldPrice = Math.round(newPrice / (1 - discountRate / 100));
+      const isCampaign = item.isDailyCampaign === true;
+
+      const newPrice = isCampaign
+        ? Number(item.campaignPrice)
+        : Number(item.basePrice);
+
+      let oldPrice = Number(item.basePrice);
+
+      if (!isCampaign && discountRate > 0) {
+        oldPrice = Math.round(newPrice / (1 - discountRate / 100));
+      }
 
       const formattedOldPrice = oldPrice.toLocaleString("tr-TR") + "₺";
 
       const formattedNewPrice = newPrice.toLocaleString("tr-TR") + "₺";
 
-      // Google puanı
-
-      const googleRates = ["4.7", "4.8", "4.9", "5.0"];
-
-      const googleRate =
-        googleRates[Math.floor(Math.random() * googleRates.length)];
+      const googleRate = item.rating;
 
       const card = `
 
@@ -118,11 +500,24 @@ onclick="openLightbox('${item.id}')">
 
 
 <img
-    src="${item.image}"
-    alt="${item.title} - Tattookan Art"
-    loading="lazy"
-    decoding="async">
-
+  src="${item.image}"
+  alt="${item.title} - Tattookan Art"
+  class="tattoo-image loading-blur"
+  loading="${index < 6 ? "eager" : "lazy"}"
+  fetchpriority="${index < 3 ? "high" : "auto"}"
+  decoding="async"
+  onload="this.classList.remove('loading-blur'); this.classList.add('image-loaded');">
+${
+  isCampaign
+    ? `<span class="discount-badge campaign-badge">
+         🔥 GÜNÜN KAMPANYASI
+       </span>`
+    : discountRate > 0
+      ? `<span class="discount-badge">
+           %${discountRate} İNDİRİM
+         </span>`
+      : ""
+}
 
 
 <div class="card-overlay">
@@ -142,9 +537,10 @@ Detayları Gör
 
 
 
+
 <a
 
-href="https://wa.me/905388746412?text=Merhaba ${item.style} çalışması hakkında bilgi almak istiyorum."
+href="https://wa.me/905388746412?text=${encodeURIComponent(`Merhaba ${item.style} #${item.categoryNumber} çalışması hakkında bilgi almak istiyorum.`)}"
 
 target="_blank"
 
@@ -174,7 +570,7 @@ WhatsApp Randevu
 
 <h5 class="text-gold mb-1">
 
-${item.style}
+${item.style} <span class="ref-number">#${item.categoryNumber}</span>
 
 </h5>
 
@@ -191,11 +587,7 @@ ${styleDescriptions[item.style] || ""}
 <div class="google-rating">
 
 
-<i class="fas fa-star"></i>
-<i class="fas fa-star"></i>
-<i class="fas fa-star"></i>
-<i class="fas fa-star"></i>
-<i class="fas fa-star"></i>
+${renderStars(googleRate)}
 
 
 <span>
@@ -210,24 +602,39 @@ ${googleRate} Google
 
 
 
+
+
 <div class="price-container">
 
+  ${
+    isCampaign || discountRate > 0
+      ? `<span class="old-price">
+           ${formattedOldPrice}
+         </span>`
+      : ""
+  }
 
-<span class="old-price">
-
-${formattedOldPrice}
-
-</span>
-
-
-<span class="new-price">
-
-${formattedNewPrice}
-
-</span>
-
+  <span class="new-price">
+    ${formattedNewPrice}
+  </span>
 
 </div>
+
+${
+  isCampaign
+    ? `
+      <div class="campaign-timer">
+        <span class="campaign-timer-label">
+          Kampanya bitimine
+        </span>
+
+        <strong class="campaign-countdown">
+          00:00:00
+        </strong>
+      </div>
+    `
+    : ""
+}
 
 
 
@@ -236,6 +643,11 @@ ${formattedNewPrice}
 
 🟢 Bugün uygun randevu
 
+</div>
+
+<div class="weekly-views">
+    <i class="fas fa-fire"></i>
+    Kişi bu modeli inceledi: ${totalViews}
 </div>
 
 
@@ -251,8 +663,10 @@ ${formattedNewPrice}
 
 `;
 
-      grid.innerHTML += card;
+      cardsHTML += card;
     });
+    grid.innerHTML = cardsHTML;
+    updateCampaignCountdowns();
   }
 
   // Filtreleme
@@ -267,10 +681,17 @@ ${formattedNewPrice}
 
       const filterValue = e.target.getAttribute("data-filter");
 
-      const filteredData =
-        filterValue === "all"
-          ? tattoos
-          : tattoos.filter((t) => t.category === filterValue);
+      let filteredData;
+
+      if (filterValue === "all") {
+        filteredData = tattoos;
+      } else if (filterValue === "daily-campaign") {
+        filteredData = dailyCampaigns;
+      } else {
+        filteredData = tattoos.filter(
+          (tattoo) => tattoo.category === filterValue,
+        );
+      }
 
       renderTattoos(filteredData);
     });
@@ -283,9 +704,20 @@ ${formattedNewPrice}
   searchInput.addEventListener("keyup", (e) => {
     const text = e.target.value.toLowerCase();
 
-    const filtered = tattoos.filter((t) =>
-      t.title.toLowerCase().includes(text),
-    );
+    const filtered = tattoos.filter((t) => {
+      const searchableText = [
+        t.title,
+        t.style,
+        t.category,
+        t.description,
+        t.technique,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return searchableText.includes(text);
+    });
 
     renderTattoos(filtered);
   });
@@ -294,9 +726,16 @@ ${formattedNewPrice}
 
   window.openLightbox = function (id) {
     const item = tattoos.find((tattoo) => String(tattoo.id) === String(id));
+
+    if (!item) {
+      console.error("Dövme bulunamadı:", id);
+      return;
+    }
+
     document.getElementById("lightboxTitle").innerHTML = item.title;
 
     document.getElementById("lightboxStyle").innerHTML = item.style;
+
     document.getElementById("lightboxDescription").innerHTML =
       item.description || "";
 
@@ -305,14 +744,21 @@ ${formattedNewPrice}
     document.getElementById("lightboxTechnique").innerHTML =
       item.technique || "";
 
-    document.getElementById("lightboxCategory").innerHTML = item.style;
+    document.getElementById("lightboxCategory").innerHTML =
+      `${item.style} #${item.categoryNumber}`;
 
-    if (!item) return;
+    const discountRate = Number(item.discount) || 0;
+    const lightboxDiscountBadge = document.getElementById(
+      "lightboxDiscountBadge",
+    );
 
-    const discountRate = 35;
-    const ratings = ["4.7", "4.8", "4.9", "5.0"];
-
-    const googleRate = ratings[Math.floor(Math.random() * ratings.length)];
+    if (discountRate > 0) {
+      lightboxDiscountBadge.textContent = `%${discountRate} İNDİRİM`;
+      lightboxDiscountBadge.style.display = "block";
+    } else {
+      lightboxDiscountBadge.style.display = "none";
+    }
+    const googleRate = item.rating;
 
     const oldPrice = Math.round(item.basePrice / (1 - discountRate / 100));
 
@@ -322,24 +768,41 @@ ${formattedNewPrice}
 
     document.getElementById("lightboxStyle").innerHTML = item.style;
 
-    document.getElementById("lightboxOldPrice").innerHTML =
-      oldPrice.toLocaleString("tr-TR") + "₺";
+    const lightboxOldPrice = document.getElementById("lightboxOldPrice");
+    const lightboxPrice = document.getElementById("lightboxPrice");
 
-    document.getElementById("lightboxPrice").innerHTML =
-      item.basePrice.toLocaleString("tr-TR") + "₺";
+    if (discountRate > 0) {
+      lightboxOldPrice.textContent = oldPrice.toLocaleString("tr-TR") + "₺";
+
+      lightboxOldPrice.style.display = "block";
+    } else {
+      lightboxOldPrice.textContent = "";
+      lightboxOldPrice.style.display = "none";
+    }
+
+    lightboxPrice.textContent = item.basePrice.toLocaleString("tr-TR") + "₺";
+
+    const itemReference = `${item.style} #${item.categoryNumber}`;
+
+    // item.title bazı kayıtlarda item.style ile birebir aynı oluyor
+    // (örn. ikisi de "Fine Line"); bu durumda parantez içini tekrar etmiyoruz.
+    const hasDistinctTitle =
+      item.title &&
+      item.title.trim().toLowerCase() !== item.style.trim().toLowerCase();
+
+    const whatsappMessage = hasDistinctTitle
+      ? `Merhaba "${itemReference}" (${item.title}) çalışması için bilgi almak istiyorum.`
+      : `Merhaba "${itemReference}" çalışması için bilgi almak istiyorum.`;
 
     document.getElementById("lightboxWhatsapp").href =
-      `https://wa.me/905388746412?text=Merhaba ${item.title} çalışması için bilgi almak istiyorum.`;
+      `https://wa.me/905388746412?text=${encodeURIComponent(whatsappMessage)}`;
     const aiMessage = encodeURIComponent(
       `Merhaba Tattookan.art,
 
 AI destekli özel dövme tasarımı hakkında bilgi almak istiyorum.
 
-Referans tarz:
-${item.style}
-
-Çalışma:
-${item.title}
+Referans çalışma:
+${hasDistinctTitle ? `${itemReference} - ${item.title}` : itemReference}
 
 Bu tarzdan ilham alarak bana özel bir tasarım oluşturabilir miyiz?
 
@@ -378,14 +841,17 @@ Teşekkür ederim.`,
 
   const reviewsContainer = document.getElementById("reviews-container");
 
-  reviews.forEach((rev) => {
-    let stars = "";
+  // "reviews" bölümü HTML'de şu an yorum satırına alınmış (bkz. index.html).
+  // Element DOM'da yoksa bu bloğu atla, aksi halde script burada durur.
+  if (reviewsContainer) {
+    reviews.forEach((rev) => {
+      let stars = "";
 
-    for (let i = 0; i < rev.stars; i++) {
-      stars += '<i class="fas fa-star text-gold"></i>';
-    }
+      for (let i = 0; i < rev.stars; i++) {
+        stars += '<i class="fas fa-star text-gold"></i>';
+      }
 
-    reviewsContainer.innerHTML += `
+      reviewsContainer.innerHTML += `
 
         <div class="col-md-4 mb-4">
 
@@ -412,5 +878,88 @@ Teşekkür ederim.`,
         </div>
 
         `;
+    });
+  }
+
+  // updateCampaignCountdowns bu closure içinde tanımlı olduğu için
+  // setInterval çağrısı da burada olmalı, aksi halde fonksiyon
+  // görünmez ve geri sayım hiç tetiklenmez (sabit kalır).
+  setInterval(updateCampaignCountdowns, 1000);
+});
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./service-worker.js")
+
+      .then(() => {
+        console.log("✅ Service Worker aktif.");
+      })
+
+      .catch((error) => {
+        console.log(error);
+      });
   });
+}
+
+let deferredInstallPrompt = null;
+
+const installAppBox = document.getElementById("installAppBox");
+
+const installAppButton = document.getElementById("installAppButton");
+
+const closeInstallApp = document.getElementById("closeInstallApp");
+
+function isAppInstalled() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true
+  );
+}
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+
+  deferredInstallPrompt = event;
+
+  const closedAt = Number(localStorage.getItem("installBoxClosedAt"));
+
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  const canShowAgain = !closedAt || Date.now() - closedAt >= oneDay;
+
+  if (installAppBox && !isAppInstalled() && canShowAgain) {
+    installAppBox.classList.add("show");
+  }
+});
+
+if (installAppButton) {
+  installAppButton.addEventListener("click", async () => {
+    if (!deferredInstallPrompt) {
+      return;
+    }
+
+    deferredInstallPrompt.prompt();
+
+    const result = await deferredInstallPrompt.userChoice;
+
+    console.log("PWA kurulum sonucu:", result.outcome);
+
+    deferredInstallPrompt = null;
+    installAppBox?.classList.remove("show");
+  });
+}
+
+if (closeInstallApp) {
+  closeInstallApp.addEventListener("click", () => {
+    installAppBox?.classList.remove("show");
+
+    localStorage.setItem("installBoxClosedAt", Date.now().toString());
+  });
+}
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  installAppBox?.classList.remove("show");
+
+  console.log("✅ Tattookan uygulaması kuruldu.");
 });

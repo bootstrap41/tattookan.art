@@ -215,8 +215,8 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
 }
 
 /* Hover durumunda premium, hafif bir yaklaşma efekti */
-.premium-card:hover .card-img-wrapper img {
-    transform: scale(1.05); 
+.premium-card:hover .card-img-wrapper img.image-loaded {
+    transform: scale(1.05);
 }
 .discount-badge {
     position: absolute;
@@ -258,6 +258,10 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
     color: var(--text-main);
     padding-left: 40px;
     border-radius: 20px;
+}
+.premium-input::placeholder {
+    color: #cfcfcf;
+    opacity: 1;
 }
 .premium-input:focus {
     background: var(--darker);
@@ -1167,3 +1171,468 @@ body.loading {
 .map-container:hover iframe {
     filter: grayscale(0.7) invert(0.9) contrast(1.1);
 }
+
+/* ========================================== */
+/* PREMIUM AFTERCARE CARD STYLES              */
+/* ========================================== */
+
+.text-silver {
+    color: #cccccc !important;
+    letter-spacing: 0.5px;
+}
+
+.care-card {
+    background-color: #080808;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 35px 25px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Kartların üzerine gelindiğinde gold çizgi parlaması */
+.care-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(212, 175, 55, 0.3);
+    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.05);
+}
+
+/* Yasaklar kartı için özel hafif gold çerçeve */
+.border-gold-soft {
+    border-color: rgba(212, 175, 55, 0.15);
+}
+
+/* Arka plandaki asil büyük sayılar/ikonlar */
+.care-badge {
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    font-size: 5.5rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.02);
+    font-family: 'Montserrat', sans-serif;
+    user-select: none;
+    transition: color 0.4s ease;
+}
+
+.badge-alert {
+    color: rgba(212, 175, 55, 0.03);
+}
+
+.care-card:hover .care-badge {
+    color: rgba(212, 175, 55, 0.08); /* Hover durumunda arkadaki sayı hafifçe gold parlar */
+}
+
+.care-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+}
+
+.care-text {
+    color: #e0e0e0;
+    font-size: 13.5px;
+    line-height: 1.7;
+    margin-bottom: 0;
+}
+
+.care-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.care-list li {
+    color: #e0e0e0;
+    font-size: 13.5px;
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.care-list li:last-child {
+    margin-bottom: 0;
+}
+
+/* ========================================== */
+/* ÇAKIŞMASIZ FOOTER & TELİF STYLES           */
+/* ========================================== */
+
+/* 1. GENEL BEYAZ ALANLAR (Adres, Telefon, Ekip İsimleri) */
+#contact p, 
+#contact .text-muted, 
+#contact span,
+footer, 
+footer .text-muted,
+.team-member {
+    color: #ffffff !important; /* Bunlar net beyaz kalacak */
+}
+
+/* 2. GENEL LİNKLER VE HOVER DURUMLARI */
+#contact a, 
+footer a {
+    color: #ffffff !important;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+#contact a:hover, 
+footer a:hover {
+    color: #d4af37 !important; /* Üzerine gelince gold olur */
+}
+
+/* 3. TELİF ALANI (Çakışmayı çözen, nokta atışı gold alan) */
+/* Özgüllüğü (specificity) artırarak beyaz kodunu tamamen eziyoruz */
+footer .copyright,
+footer p.copyright,
+.copyright,
+.copyright a {
+    color: #d4af37 !important; /* Telif yazısı ve @obsidianink.izmit artık kesinlikle sarı/gold */
+    font-weight: 500;
+}
+
+/* Telif içindeki Instagram linkine fareyle gelince beyaza dönsün */
+footer .copyright a:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+}
+
+/* ========================================== */
+/* GOOGLE REVIEWS SECTION STYLES              */
+/* ========================================== */
+#google-reviews {
+    background-color: #0b0b0b; /* Derin asil siyah arka plan */
+    position: relative;
+}
+
+/* Başlık Altındaki Gold Çizgi */
+.title-line {
+    width: 60px;
+    height: 20px;
+    border-bottom: 2px solid #d4af37;
+    margin: 0 auto;
+}
+
+/* Premium Yorum Kartları */
+.review-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(212, 175, 55, 0.1); /* Çok hafif gold çerçeve */
+    padding: 30px;
+    border-radius: 8px;
+    height: 100%;
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Ortadaki kartın hafifçe öne çıkması için (Aura efekti) */
+.featured-card {
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.05);
+}
+
+.review-card:hover {
+    transform: translateY(-5px);
+    border-color: #d4af37;
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* Gold Yıldızlar */
+.review-stars {
+    color: #d4af37;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+/* Yorum Metni */
+.review-text {
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+/* Müşteri İsmi */
+.client-name {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* ========================================== */
+/* KOCAMAN VE ASİL GOOGLE BUTONU              */
+/* ========================================== */
+.btn-google-reviews {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: #d4af37 !important;
+    border: 2px solid #d4af37;
+    padding: 14px 35px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn-google-reviews:hover {
+    background-color: #d4af37;
+    color: #000000 !important; /* Üzerine gelince içi gold, yazısı siyah olur */
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    transform: scale(1.02);
+}
+#google-reviews .text-muted {
+    color: #ffffff !important;
+}
+.weekly-views {
+    margin-top: 10px;
+    color: #a8a8a8;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.weekly-views i {
+    color: var(--gold);
+    font-size: 12px;
+}
+@media (max-width: 576px) {
+    .weekly-views {
+        font-size: 9px;
+        margin-top: 5px;
+    }
+
+    .weekly-views i {
+        font-size: 9px;
+    }
+}
+.tattoo-image {
+    transition:
+        filter 0.6s ease,
+        opacity 0.6s ease,
+        transform 0.6s ease;
+}
+
+.tattoo-image.loading-blur {
+    filter: blur(14px);
+    opacity: 0.55;
+    transform: scale(1.04);
+}
+
+.tattoo-image.image-loaded {
+    filter: blur(0);
+    opacity: 1;
+    transform: scale(1);
+}
+.install-app-box {
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    z-index: 9998;
+    display: none;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 1px;
+    border-radius: 16px;
+    background: linear-gradient(
+        135deg,
+        rgba(212, 175, 55, 0.8),
+        rgba(212, 175, 55, 0.12)
+    );
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.75);
+}
+
+.install-app-box.show {
+    display: block;
+    animation: installBoxIn 0.45s ease;
+}
+
+.install-app-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 48px 16px 16px;
+    border-radius: 15px;
+    background: #090909;
+}
+
+.install-app-icon {
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.install-app-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.install-app-text {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.install-app-text strong {
+    color: var(--gold);
+    font-family: "Cinzel", serif;
+    font-size: 15px;
+}
+
+.install-app-text span {
+    margin-top: 3px;
+    color: #b8b8b8;
+    font-size: 12px;
+}
+
+.install-app-button {
+    flex-shrink: 0;
+    padding: 10px 15px;
+    border: 1px solid var(--gold);
+    border-radius: 30px;
+    background: var(--gold);
+    color: #050505;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.install-app-close {
+    position: absolute;
+    top: 5px;
+    right: 9px;
+    border: 0;
+    background: transparent;
+    color: #999;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+@keyframes installBoxIn {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 576px) {
+    .install-app-box {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+    }
+
+    .install-app-content {
+        flex-wrap: wrap;
+        padding: 14px 38px 14px 14px;
+    }
+
+    .install-app-icon {
+        flex-basis: 45px;
+        width: 45px;
+        height: 45px;
+    }
+
+    .install-app-text {
+        width: calc(100% - 65px);
+    }
+
+    .install-app-button {
+        width: 100%;
+    }
+}
+
+.campaign-badge {
+    background: linear-gradient(
+        135deg,
+        #d4af37,
+        #ff8c00
+    );
+
+    color: #050505;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+
+    box-shadow:
+        0 0 18px rgba(212, 175, 55, 0.55);
+
+    animation: campaignGlow 1.8s infinite ease-in-out;
+}
+
+@keyframes campaignGlow {
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow:
+            0 0 10px rgba(212, 175, 55, 0.35);
+    }
+
+    50% {
+        transform: scale(1.03);
+        box-shadow:
+            0 0 24px rgba(255, 140, 0, 0.65);
+    }
+}
+
+.campaign-timer {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 8px;
+    background: rgba(212, 175, 55, 0.06);
+    text-align: center;
+}
+
+.campaign-timer-label {
+    display: block;
+    margin-bottom: 4px;
+    color: #b8b8b8;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.campaign-countdown {
+    color: var(--gold);
+    font-size: 18px;
+    letter-spacing: 2px;
+}
+
+@media (max-width: 576px) {
+    .campaign-timer {
+        margin-top: 7px;
+        padding: 7px;
+    }
+
+    .campaign-timer-label {
+        font-size: 8px;
+    }
+
+    .campaign-countdown {
+        font-size: 13px;
+    }
+}
+
