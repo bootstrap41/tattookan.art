@@ -239,6 +239,22 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Günün kampanyaları:", dailyCampaigns);
 
       renderTattoos(tattoos);
+
+      // Bildirim/paylaşım linklerinden gelen kullanıcıları doğrudan ilgili
+      // kategoriye filtreleyip o bölüme kaydırıyoruz.
+      // Örn: https://tattookan.art/#daily-campaign -> "Günün Kampanyaları" filtresi
+      const hashCategory = window.location.hash.replace("#", "");
+      const matchingFilterBtn = document.querySelector(
+        `.btn-filter[data-filter="${hashCategory}"]`,
+      );
+
+      if (matchingFilterBtn) {
+        matchingFilterBtn.click();
+
+        document
+          .getElementById("models")
+          .scrollIntoView({ behavior: "smooth" });
+      }
     })
 
     .catch((error) => {
