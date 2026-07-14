@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Bildirim/paylaşım linklerinden gelen kullanıcıları doğrudan ilgili
       // kategoriye filtreleyip o bölüme kaydırıyoruz.
-      // Örn: https://tattookan.art/#daily-campaign -> "Günün Kampanyaları" filtresi
+      // Örn: https://tattookanart.com/#daily-campaign -> "Günün Kampanyaları" filtresi
       const hashCategory = window.location.hash.replace("#", "");
       const matchingFilterBtn = document.querySelector(
         `.btn-filter[data-filter="${hashCategory}"]`,
@@ -803,8 +803,7 @@ ${
     // item.title bazı kayıtlarda item.style ile birebir aynı oluyor
     // (örn. ikisi de "Fine Line"); bu durumda parantez içini tekrar etmiyoruz.
     const hasDistinctTitle =
-      item.title &&
-      item.title.trim().toLowerCase() !== item.style.trim().toLowerCase();
+      item.title && item.title.trim().toLowerCase() !== item.style.trim().toLowerCase();
 
     const whatsappMessage = hasDistinctTitle
       ? `Merhaba "${itemReference}" (${item.title}) çalışması için bilgi almak istiyorum.`

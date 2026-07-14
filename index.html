@@ -9,16 +9,16 @@
 <meta name="robots" content="index, follow">
 
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://tattookan.art/">
-<link rel="canonical" href="https://tattookan.art/">
+<meta property="og:url" content="https://tattookanart.com/">
+<link rel="canonical" href="https://tattookanart.com/">
 <meta property="og:title" content="Tattookan Art | İzmit Premium Dövme Stüdyosu">
 <meta property="og:description" content="Kişiye özel dövme tasarımları ve profesyonel seanslar. WhatsApp üzerinden hemen randevu al.">
-<meta property="og:image" content="https://tattookan.art/assets/images/background/og-share-image.webp">
+<meta property="og:image" content="https://tattookanart.com/assets/images/background/og-share-image.webp">
 <meta property="og:image:type" content="image/webp">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tattookan Art | İzmit Dövme Stüdyosu">
 <meta name="twitter:description" content="Dark Realism, Fine Line, mandala, geometrik ve minimal dövme sanatında İzmit'in öncü stüdyosu.">
-<meta name="twitter:image" content="https://tattookan.art/assets/images/background/og-share-image.webp">
+<meta name="twitter:image" content="https://tattookanart.com/assets/images/background/og-share-image.webp">
     
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
@@ -36,6 +36,8 @@
 <link
 rel="apple-touch-icon"
 href="assets/icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icons/icon-512.png">
     <link rel="stylesheet" href="style.css">
 
     <script type="application/ld+json">
@@ -43,9 +45,9 @@ href="assets/icons/icon-192.png">
   "@context": "https://schema.org",
   "@type": "TattooParlor",
   "name": "Tattookan.art",
-  "image": "https://tattookan.art/assets/images/background/og-share-image.webp",
-  "@id": "https://tattookan.art",
-  "url": "https://tattookan.art",
+  "image": "https://tattookanart.com/assets/images/background/og-share-image.webp",
+  "@id": "https://tattookanart.com",
+  "url": "https://tattookanart.com",
   "telephone": "+905388746412",
   "priceRange": "$$",
   "address": {
@@ -497,6 +499,22 @@ AI Tasarım Talebi
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
 
 <script src="script.js" defer></script>
+
+<!-- OneSignal bildirim SDK'sı -->
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function (OneSignal) {
+    await OneSignal.init({
+      appId: "fd01b9e3-0780-43f6-8667-6ccb025624a6",
+      // OneSignal kodu ayrı bir dosya değil, bizim kendi PWA
+      // service-worker.js dosyamızın içine eklendi (importScripts ile).
+      // Bu yüzden OneSignal'a "kendi worker dosyanı arama, bunu kullan" diyoruz:
+      serviceWorkerPath: "service-worker.js",
+      serviceWorkerParam: { scope: "/" },
+    });
+  });
+</script>
 <div id="installAppBox" class="install-app-box">
   <div class="install-app-content">
     <div class="install-app-icon">
