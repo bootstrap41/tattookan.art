@@ -4,7 +4,7 @@ importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 
 // Site içeriği değiştiğinde bu ismi artırman gerekiyor (v1 -> v2 -> v3...),
 // aksi halde ziyaretçilerin tarayıcısı eski önbelleği kullanmaya devam eder.
-const CACHE_NAME = "tattookan-v6";
+const CACHE_NAME = "tattookan-v7";
 
 const urlsToCache = [
   "./",
@@ -59,8 +59,12 @@ self.addEventListener("fetch", (event) => {
 
   if (isDynamicFile) {
     // HTML, JS ve JSON için önce ağı dene.
+    // { cache: "no-store" } ÖNEMLİ: bu olmadan fetch() tarayıcının kendi
+    // HTTP önbelleğini (bizim service worker'ımızdan bağımsız, sunucunun
+    // Cache-Control süresine göre) hâlâ kullanabiliyor ve "ağa gidiyoruz"
+    // dediğimiz halde yine eski veri dönebiliyor.
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: "no-store" })
         .then((networkResponse) => {
           if (networkResponse.status === 200) {
             const clonedResponse = networkResponse.clone();
