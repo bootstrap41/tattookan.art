@@ -504,8 +504,10 @@ AI Tasarım Talebi
       serviceWorkerParam: { scope: "/" },
       // Custom Code entegrasyonunda zil (Subscription Bell), panelden
       // seçmiş olsak bile burada AÇIKÇA etkinleştirilmezse görünmüyor.
+      // WhatsApp ikonu sağ altta olduğu için zili sol alta alıyoruz.
       notifyButton: {
         enable: true,
+        position: "bottom-left",
       },
     });
   });
