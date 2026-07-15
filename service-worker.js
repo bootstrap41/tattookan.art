@@ -4,7 +4,7 @@ importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 
 // Site içeriği değiştiğinde bu ismi artırman gerekiyor (v1 -> v2 -> v3...),
 // aksi halde ziyaretçilerin tarayıcısı eski önbelleği kullanmaya devam eder.
-const CACHE_NAME = "tattookan-v3";
+const CACHE_NAME = "tattookan-v4";
 
 const urlsToCache = [
   "./",
@@ -46,21 +46,22 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
-  // Video gibi büyük dosyalar tarayıcı tarafından "Range" başlığıyla
-  // parça parça istenir ve sunucu 206 (Partial Content) döner.
-  // Cache API bu tür kısmi yanıtları saklayamaz, o yüzden bu istekleri
-  // önbellekleme mantığına hiç sokmuyoruz; direkt ağdan cevaplansın.
   if (event.request.headers.has("range")) {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return (
-        response ||
-        fetch(event.request).then((networkResponse) => {
-          // Sadece tam ve başarılı (200) yanıtları önbelleğe al.
-          // 206 (parçalı), 3xx/4xx/5xx gibi diğer durumları atla.
+  const requestUrl = new URL(event.request.url);
+  const isDynamicFile =
+    requestUrl.pathname.endsWith("/script.js") ||
+    requestUrl.pathname.endsWith("/data/tattoos.json") ||
+    requestUrl.pathname.endsWith("/index.html") ||
+    requestUrl.pathname === "/";
+
+  if (isDynamicFile) {
+    // HTML, JS ve JSON için önce ağı dene.
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
           if (networkResponse.status === 200) {
             const clonedResponse = networkResponse.clone();
 
@@ -71,7 +72,30 @@ self.addEventListener("fetch", (event) => {
 
           return networkResponse;
         })
-      );
+        .catch(() => caches.match(event.request)),
+    );
+
+    return;
+  }
+
+  // Görseller ve diğer statik dosyalar için cache-first.
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      return fetch(event.request).then((networkResponse) => {
+        if (networkResponse.status === 200) {
+          const clonedResponse = networkResponse.clone();
+
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, clonedResponse);
+          });
+        }
+
+        return networkResponse;
+      });
     }),
   );
 });

@@ -201,30 +201,99 @@ document.addEventListener("DOMContentLoaded", () => {
     return shuffled;
   }
 
+  const categoryMeta = {
+    "dark-realism": { style: "Dark Realism", prefix: "DR" },
+    "fine-line": { style: "Fine Line", prefix: "FL" },
+    mandala: { style: "Mandala", prefix: "MA" },
+    "cover-up": { style: "Cover Up", prefix: "CU" },
+    minimal: { style: "Minimal", prefix: "MI" },
+  };
+
+  function getImageFileName(imagePath) {
+    return (
+      String(imagePath || "")
+        .split("/")
+        .pop() || ""
+    );
+  }
+
+  function createReference(item) {
+    const meta = categoryMeta[item.category] || {
+      style: item.category || "Tattoo",
+      prefix: "TT",
+    };
+
+    const fileName = getImageFileName(item.image);
+
+    // Yeni önerilen ad biçimi: dr-001-antik-misir.webp
+    const prefixedMatch = fileName.match(/^([a-z]{2})-(\d{1,4})-/i);
+
+    if (prefixedMatch) {
+      return `${prefixedMatch[1].toUpperCase()}-${String(
+        Number(prefixedMatch[2]),
+      ).padStart(3, "0")}`;
+    }
+
+    // Mevcut ad biçimi: image1.webp
+    const imageNumberMatch = fileName.match(/(?:image|img)[-_]?(\d+)/i);
+
+    if (imageNumberMatch) {
+      return `${meta.prefix}-${String(Number(imageNumberMatch[1])).padStart(
+        3,
+        "0",
+      )}`;
+    }
+
+    // Son çare: benzersiz id kullanılır.
+    return `${meta.prefix}-${String(item.id).padStart(3, "0")}`;
+  }
+
+  function normalizeTattoo(item) {
+    const meta = categoryMeta[item.category] || {
+      style: item.category || "Tattoo",
+      prefix: "TT",
+    };
+
+    return {
+      ...item,
+      style: meta.style,
+      reference: createReference(item),
+    };
+  }
+
+  function sortByReference(items) {
+    return [...items].sort((a, b) => {
+      const refA = String(a.reference || "");
+      const refB = String(b.reference || "");
+
+      const [prefixA, numberTextA] = refA.split("-");
+      const [prefixB, numberTextB] = refB.split("-");
+
+      if (prefixA !== prefixB) {
+        return prefixA.localeCompare(prefixB, "tr");
+      }
+
+      return (Number(numberTextA) || 0) - (Number(numberTextB) || 0);
+    });
+  }
+
   // Portfolyo JSON yükleme
 
   fetch("./data/tattoos.json")
     .then((response) => response.json())
 
     .then((data) => {
-      // Her çalışmaya, kategorisi içindeki JSON sırasına göre sabit bir
-      // numara veriyoruz (örn. "Fine Line #11"). Bu numara tattoos.json
-      // içindeki sıraya bağlı olduğu için sayfa yenilense/karışsa bile değişmez.
-      const categoryCounters = {};
-      const numberedData = data.map((item) => {
-        categoryCounters[item.category] =
-          (categoryCounters[item.category] || 0) + 1;
+      // style ve reference artık JSON'da tutulmaz.
+      // Kategori ve görsel dosya adından otomatik üretilir.
+      const normalizedData = data.map(normalizeTattoo);
 
-        return { ...item, categoryNumber: categoryCounters[item.category] };
-      });
-
-      dailyCampaigns = createDailyCampaigns(numberedData);
+      dailyCampaigns = createDailyCampaigns(normalizedData);
 
       const campaignMap = new Map(
         dailyCampaigns.map((item) => [String(item.id), item]),
       );
 
-      const dataWithCampaigns = numberedData.map((item) => {
+      const dataWithCampaigns = normalizedData.map((item) => {
         const campaignItem = campaignMap.get(String(item.id));
 
         return campaignItem || item;
@@ -268,15 +337,15 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>`;
     });
   const styleDescriptions = {
-    "Dark Realism": "Premium Black & Grey",
+    "Dark Realism": "Gölge ve Kontrast Sanatı",
 
-    "Fine Line": "Minimal Tattoo",
+    "Fine Line": "Mikro Detay & İnce Çizgi",
 
-    Mandala: "Sacred Geometry",
+    Mandala: "Spiritüel ve Geometrik Dövmeler",
 
-    "Cover Up": "Tattoo Transformation",
+    "Cover Up": "Kapama Dövme Modelleri",
 
-    Minimal: "Clean & Simple Tattoo",
+    Minimal: "Temiz & çizgili Dövme Modelleri",
   };
 
   // Kartları oluşturma
@@ -556,7 +625,7 @@ Detayları Gör
 
 <a
 
-href="https://wa.me/905388746412?text=${encodeURIComponent(`Merhaba ${item.style} #${item.categoryNumber} çalışması hakkında bilgi almak istiyorum.`)}"
+href="https://wa.me/905388746412?text=${encodeURIComponent(`Merhaba ${item.reference} kodlu ${item.style} çalışması hakkında bilgi almak istiyorum.`)}"
 
 target="_blank"
 
@@ -586,7 +655,7 @@ WhatsApp Randevu
 
 <h5 class="text-gold mb-1">
 
-${item.style} <span class="ref-number">#${item.categoryNumber}</span>
+${item.style} <span class="ref-number">${item.reference}</span>
 
 </h5>
 
@@ -655,11 +724,11 @@ ${
 
 
 
-<div class="availability">
+ <div class="availability">
 
 🟢 Bugün uygun randevu
 
-</div>
+</div> 
 
 <div class="weekly-views">
     <i class="fas fa-fire"></i>
@@ -702,10 +771,10 @@ ${
       if (filterValue === "all") {
         filteredData = tattoos;
       } else if (filterValue === "daily-campaign") {
-        filteredData = dailyCampaigns;
+        filteredData = sortByReference(dailyCampaigns);
       } else {
-        filteredData = tattoos.filter(
-          (tattoo) => tattoo.category === filterValue,
+        filteredData = sortByReference(
+          tattoos.filter((tattoo) => tattoo.category === filterValue),
         );
       }
 
@@ -721,13 +790,7 @@ ${
     const text = e.target.value.toLowerCase();
 
     const filtered = tattoos.filter((t) => {
-      const searchableText = [
-        t.title,
-        t.style,
-        t.category,
-        t.description,
-        t.technique,
-      ]
+      const searchableText = [t.title, t.style, t.category, t.description]
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
@@ -755,13 +818,8 @@ ${
     document.getElementById("lightboxDescription").innerHTML =
       item.description || "";
 
-    document.getElementById("lightboxNeedles").innerHTML = item.needles || "";
-
-    document.getElementById("lightboxTechnique").innerHTML =
-      item.technique || "";
-
     document.getElementById("lightboxCategory").innerHTML =
-      `${item.style} #${item.categoryNumber}`;
+      `${item.style} · ${item.reference}`;
 
     const discountRate = Number(item.discount) || 0;
     const lightboxDiscountBadge = document.getElementById(
@@ -798,12 +856,13 @@ ${
 
     lightboxPrice.textContent = item.basePrice.toLocaleString("tr-TR") + "₺";
 
-    const itemReference = `${item.style} #${item.categoryNumber}`;
+    const itemReference = `${item.reference} · ${item.style}`;
 
     // item.title bazı kayıtlarda item.style ile birebir aynı oluyor
     // (örn. ikisi de "Fine Line"); bu durumda parantez içini tekrar etmiyoruz.
     const hasDistinctTitle =
-      item.title && item.title.trim().toLowerCase() !== item.style.trim().toLowerCase();
+      item.title &&
+      item.title.trim().toLowerCase() !== item.style.trim().toLowerCase();
 
     const whatsappMessage = hasDistinctTitle
       ? `Merhaba "${itemReference}" (${item.title}) çalışması için bilgi almak istiyorum.`

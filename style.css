@@ -589,6 +589,13 @@ right:20px;
     z-index:5;
 
 }
+/* Görsel referans numarası (örn. Fine Line #11) */
+.ref-number{
+    font-size:13px;
+    color:var(--text-muted);
+    font-weight:600;
+    letter-spacing:0;
+}
 /* Premium açıklama */
 
 .style-description{
@@ -1635,4 +1642,3 @@ footer .copyright a:hover {
         font-size: 13px;
     }
 }
-
