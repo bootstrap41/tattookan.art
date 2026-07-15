@@ -502,6 +502,11 @@ AI Tasarım Talebi
       // Bu yüzden OneSignal'a "kendi worker dosyanı arama, bunu kullan" diyoruz:
       serviceWorkerPath: "service-worker.js",
       serviceWorkerParam: { scope: "/" },
+      // Custom Code entegrasyonunda zil (Subscription Bell), panelden
+      // seçmiş olsak bile burada AÇIKÇA etkinleştirilmezse görünmüyor.
+      notifyButton: {
+        enable: true,
+      },
     });
   });
 </script>
