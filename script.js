@@ -377,25 +377,31 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  function getCampaignRate(price, randomValue) {
-    let minRate;
-    let maxRate;
+  // Kategoriye göre SABİT günlük kampanya indirim oranları.
+  const CATEGORY_CAMPAIGN_RATES = {
+    "dark-realism": 25,
+    "fine-line": 20,
+    minimal: 15,
+    "cover-up": 25,
+    mandala: 20,
+  };
 
-    if (price <= 3000) {
-      minRate = 10;
-      maxRate = 15;
-    } else if (price <= 8000) {
-      minRate = 15;
-      maxRate = 20;
-    } else if (price <= 20000) {
-      minRate = 20;
-      maxRate = 23;
-    } else {
-      minRate = 23;
-      maxRate = 25;
+  function getCampaignRate(category) {
+    return CATEGORY_CAMPAIGN_RATES[category] || 20;
+  }
+
+  // item.basePrice, normal indirim (item.discount) ZATEN uygulanmış olan
+  // güncel satış fiyatıdır — kampanya indirimini basePrice üzerinden
+  // hesaplarsak "indirimin indirimi" oluşur. Bu yüzden kampanya hesaplaması
+  // için önce indirim uygulanmamış GERÇEK orijinal fiyatı buluyoruz.
+  function getTrueOriginalPrice(item) {
+    const discountRate = Number(item.discount) || 0;
+
+    if (discountRate <= 0) {
+      return Number(item.basePrice);
     }
 
-    return Math.floor(randomValue * (maxRate - minRate + 1)) + minRate;
+    return Math.round(Number(item.basePrice) / (1 - discountRate / 100));
   }
 
   function roundCampaignPrice(price) {
@@ -466,10 +472,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     return selectedItems.map((item) => {
-      const campaignRate = getCampaignRate(Number(item.basePrice), random());
+      const campaignRate = getCampaignRate(item.category);
 
-      const rawCampaignPrice =
-        Number(item.basePrice) * (1 - campaignRate / 100);
+      const trueOriginalPrice = getTrueOriginalPrice(item);
+
+      const rawCampaignPrice = trueOriginalPrice * (1 - campaignRate / 100);
 
       const campaignPrice = roundCampaignPrice(rawCampaignPrice);
 
@@ -478,6 +485,9 @@ document.addEventListener("DOMContentLoaded", () => {
         isDailyCampaign: true,
         campaignRate,
         campaignPrice,
+        // Kartlarda/lightbox'ta "eski fiyat" olarak bunu gösteriyoruz,
+        // basePrice'ı değil (basePrice zaten indirimli olabilir).
+        campaignOriginalPrice: trueOriginalPrice,
       };
     });
   }
@@ -559,7 +569,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ? Number(item.campaignPrice)
         : Number(item.basePrice);
 
-      let oldPrice = Number(item.basePrice);
+      let oldPrice = isCampaign
+        ? Number(item.campaignOriginalPrice)
+        : Number(item.basePrice);
 
       if (!isCampaign && discountRate > 0) {
         oldPrice = Math.round(newPrice / (1 - discountRate / 100));
@@ -595,7 +607,7 @@ onclick="openLightbox('${item.id}')">
 ${
   isCampaign
     ? `<span class="discount-badge campaign-badge">
-         🔥 GÜNÜN KAMPANYASI
+         🔥 %${item.campaignRate} KAMPANYA
        </span>`
     : discountRate > 0
       ? `<span class="discount-badge">
@@ -822,11 +834,15 @@ ${
       `${item.style} · ${item.reference}`;
 
     const discountRate = Number(item.discount) || 0;
+    const isCampaign = item.isDailyCampaign === true;
     const lightboxDiscountBadge = document.getElementById(
       "lightboxDiscountBadge",
     );
 
-    if (discountRate > 0) {
+    if (isCampaign) {
+      lightboxDiscountBadge.textContent = `🔥 %${item.campaignRate} KAMPANYA`;
+      lightboxDiscountBadge.style.display = "block";
+    } else if (discountRate > 0) {
       lightboxDiscountBadge.textContent = `%${discountRate} İNDİRİM`;
       lightboxDiscountBadge.style.display = "block";
     } else {
@@ -834,9 +850,16 @@ ${
     }
     const googleRate = item.rating;
 
-    const oldPrice = Math.round(item.basePrice / (1 - discountRate / 100));
+    const newPrice = isCampaign
+      ? Number(item.campaignPrice)
+      : Number(item.basePrice);
 
-    document.getElementById("lightboxImg").src = item.image;
+    const oldPrice = isCampaign
+      ? Number(item.campaignOriginalPrice)
+      : Math.round(item.basePrice / (1 - discountRate / 100));
+
+    const lightboxImgEl = document.getElementById("lightboxImg");
+    lightboxImgEl.src = item.image;
 
     document.getElementById("lightboxTitle").innerHTML = item.title;
 
@@ -845,7 +868,7 @@ ${
     const lightboxOldPrice = document.getElementById("lightboxOldPrice");
     const lightboxPrice = document.getElementById("lightboxPrice");
 
-    if (discountRate > 0) {
+    if (isCampaign || discountRate > 0) {
       lightboxOldPrice.textContent = oldPrice.toLocaleString("tr-TR") + "₺";
 
       lightboxOldPrice.style.display = "block";
@@ -854,7 +877,7 @@ ${
       lightboxOldPrice.style.display = "none";
     }
 
-    lightboxPrice.textContent = item.basePrice.toLocaleString("tr-TR") + "₺";
+    lightboxPrice.textContent = newPrice.toLocaleString("tr-TR") + "₺";
 
     const itemReference = `${item.reference} · ${item.style}`;
 
@@ -959,6 +982,7 @@ Teşekkür ederim.`,
   // setInterval çağrısı da burada olmalı, aksi halde fonksiyon
   // görünmez ve geri sayım hiç tetiklenmez (sabit kalır).
   setInterval(updateCampaignCountdowns, 1000);
+
 });
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
