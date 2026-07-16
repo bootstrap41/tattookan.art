@@ -598,7 +598,7 @@ onclick="openLightbox('${item.id}')">
 
 <img
   src="${item.image}"
-  alt="${item.title} - Tattookan Art"
+  alt="${item.title} - ${item.style} dövme - Tattookan Art İzmit"
   class="tattoo-image loading-blur"
   loading="${index < 6 ? "eager" : "lazy"}"
   fetchpriority="${index < 3 ? "high" : "auto"}"
@@ -860,6 +860,7 @@ ${
 
     const lightboxImgEl = document.getElementById("lightboxImg");
     lightboxImgEl.src = item.image;
+    lightboxImgEl.alt = `${item.title} - ${item.style} dövme çalışması - Tattookan Art İzmit`;
 
     document.getElementById("lightboxTitle").innerHTML = item.title;
 
