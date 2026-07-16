@@ -1117,3 +1117,65 @@ window.addEventListener("appinstalled", () => {
 
   console.log("✅ Tattookan uygulaması kuruldu.");
 });
+
+// === MENÜ LİNKLERİNDE KAYDIRMA DÜZELTMESİ ===
+// Sayfada 68 dövme kartı ve hero videosu olduğu için görseller yüklendikçe
+// sayfa yüksekliği değişiyor. Bu yüzden "#contact" gibi bir bağlantıya
+// tıklandığında hedef, ilk kaydırma anında henüz "yerinde" olmayabiliyor
+// (görseller yüklendikçe aşağı kayıyor) — bu da "iki kere tıklamak gerekiyor"
+// hissi veriyor. Aşağıdaki fonksiyon, kaydırmayı bir kaç kez tekrarlayarak
+// düzeltiyor.
+
+function scrollToHashTarget(hash) {
+  const target = document.querySelector(hash);
+
+  if (!target) {
+    return;
+  }
+
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function scrollToHashWithCorrection(hash) {
+  scrollToHashTarget(hash);
+
+  // İçerik yüklendikçe pozisyon kayabiliyor, bu yüzden birkaç kez
+  // tekrar düzeltiyoruz (görseller/video tamamen yüklenene kadar).
+  setTimeout(() => scrollToHashTarget(hash), 400);
+  setTimeout(() => scrollToHashTarget(hash), 900);
+
+  window.addEventListener("load", () => scrollToHashTarget(hash), {
+    once: true,
+  });
+}
+
+// Aynı sayfadaki (#...) menü linklerine tıklanınca düzeltmeli kaydırma uygula
+document.querySelectorAll('a[href^="#"]').forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const hash = link.getAttribute("href");
+
+    if (!hash || hash === "#") {
+      return;
+    }
+
+    const target = document.querySelector(hash);
+
+    if (!target) {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (history.pushState) {
+      history.pushState(null, "", hash);
+    }
+
+    scrollToHashWithCorrection(hash);
+  });
+});
+
+// Başka bir sayfadan "index.html#contact" gibi bir linkle gelindiyse,
+// sayfa tam yüklendikten sonra doğru bölüme kaydır.
+if (window.location.hash) {
+  scrollToHashWithCorrection(window.location.hash);
+}
