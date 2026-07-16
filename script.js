@@ -990,6 +990,61 @@ function isAppInstalled() {
   );
 }
 
+// iOS Safari, "beforeinstallprompt" olayını HİÇ desteklemiyor (Apple kısıtlaması) —
+// yani Android'deki gibi otomatik bir "Ana Ekrana Ekle" penceresi tetiklenemiyor.
+// Kullanıcının Paylaş menüsünden elle eklemesi gerekiyor, biz sadece
+// nasıl yapılacağını gösteren bir talimat kutusu gösterebiliyoruz.
+function isIOSDevice() {
+  const isAppleTouch = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  // iPadOS 13+ kendini "Mac" olarak tanıtıyor, dokunmatik ekran ile ayırt ediyoruz.
+  const isIPadOS =
+    navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+
+  return isAppleTouch || isIPadOS;
+}
+
+function isSafariBrowser() {
+  const ua = navigator.userAgent;
+
+  // Safari kontrolü: "Safari" geçmeli ama Chrome/Firefox/Edge gibi
+  // Safari motorunu kullanan diğer iOS tarayıcıları hariç tutulmalı
+  // (iOS'ta Chrome de Safari motorunu kullanır ama web push'u desteklemez).
+  return /^((?!chrome|android|crios|fxios|edgios).)*safari/i.test(ua);
+}
+
+if (isIOSDevice() && !isAppInstalled()) {
+  const closedAt = Number(localStorage.getItem("installBoxClosedAt"));
+
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  const canShowAgain = !closedAt || Date.now() - closedAt >= oneDay;
+
+  const iosInstallBox = document.getElementById("installAppBox");
+  const iosInstallSubtext = document.getElementById("installAppSubtext");
+  const iosInstallButton = document.getElementById("installAppButton");
+
+  if (iosInstallBox && canShowAgain) {
+    if (iosInstallSubtext) {
+      iosInstallSubtext.textContent = isSafariBrowser()
+        ? "Paylaş simgesine (⬆️) dokun, sonra 'Ana Ekrana Ekle' seçeneğine bas."
+        : "Bu özelliği kullanmak için siteyi Safari'de açman gerekiyor.";
+    }
+
+    if (iosInstallButton) {
+      iosInstallButton.textContent = "Anladım";
+
+      iosInstallButton.addEventListener("click", () => {
+        iosInstallBox.classList.remove("show");
+
+        localStorage.setItem("installBoxClosedAt", Date.now().toString());
+      });
+    }
+
+    iosInstallBox.classList.add("show");
+  }
+}
+
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
 

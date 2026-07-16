@@ -497,6 +497,8 @@ AI Tasarım Talebi
   OneSignalDeferred.push(async function (OneSignal) {
     await OneSignal.init({
       appId: "fd01b9e3-0780-43f6-8667-6ccb025624a6",
+      // OneSignal panelinin otomatik oluşturduğu Safari sertifika kimliği
+      safari_web_id: "web.onesignal.auto.05255d72-c150-4ea5-804e-422907370478",
       // OneSignal kodu ayrı bir dosya değil, bizim kendi PWA
       // service-worker.js dosyamızın içine eklendi (importScripts ile).
       // Bu yüzden OneSignal'a "kendi worker dosyanı arama, bunu kullan" diyoruz:
@@ -508,6 +510,29 @@ AI Tasarım Talebi
       notifyButton: {
         enable: true,
         position: "bottom-left",
+        text: {
+          "tip.state.unsubscribed": "Bildirimlere abone ol",
+          "tip.state.subscribed": "Bildirimlere abonesin",
+          "tip.state.blocked": "Bildirimleri engelledin",
+          "message.prenotify": "Bildirimlere abone olmak için tıkla",
+          "message.action.subscribed": "Abone olduğun için teşekkürler!",
+          "message.action.resubscribed": "Bildirimlere tekrar abone oldun",
+          "message.action.unsubscribed": "Artık bildirim almayacaksın",
+          "dialog.main.title": "Site Bildirimlerini Yönet",
+          "dialog.main.button.subscribe": "ABONE OL",
+          "dialog.main.button.unsubscribe": "ABONELİĞİ İPTAL ET",
+          "dialog.blocked.title": "Bildirimleri Engellendi",
+          "dialog.blocked.message":
+            "Bildirimlere tekrar izin vermek için tarayıcı ayarlarındaki site izinlerini güncelle.",
+        },
+      },
+      // "Custom Code" entegrasyonunda Welcome Notification paneldeki
+      // arayüzde görünmüyor, bu yüzden burada kod ile tanımlıyoruz.
+      // Biri bildirime izin verir vermez otomatik olarak bu mesaj gidiyor.
+      welcomeNotification: {
+        title: "Tattookan Art 🔥",
+        message: "Bildirimlere abone oldun! Kampanyalardan ilk sen haberdar olacaksın.",
+        url: "https://tattookanart.com/#daily-campaign",
       },
     });
   });
@@ -522,7 +547,7 @@ AI Tasarım Talebi
 
     <div class="install-app-text">
       <strong>Tattookan.art</strong>
-      <span>Siteyi telefonuna uygulama olarak ekle.</span>
+      <span id="installAppSubtext">Siteyi telefonuna uygulama olarak ekle.</span>
     </div>
 
     <button
