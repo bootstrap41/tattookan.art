@@ -1642,3 +1642,64 @@ footer .copyright a:hover {
         font-size: 13px;
     }
 }
+
+/* ========================= */
+/* HEDİYE ÇEKİ BANNER */
+/* ========================= */
+
+.gift-cta-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.02));
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 16px;
+    padding: 18px 24px;
+}
+
+.gift-cta-text {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.gift-cta-text i {
+    font-size: 28px;
+}
+
+.gift-cta-text strong {
+    display: block;
+    color: var(--gold);
+    font-size: 17px;
+}
+
+.gift-cta-text span {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* ========================= */
+/* NAVBAR LOGO İKONU */
+/* ========================= */
+
+.navbar-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar-logo {
+    height: 34px;
+    width: 34px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+@media (max-width: 576px) {
+    .navbar-logo {
+        height: 28px;
+        width: 28px;
+    }
+}
