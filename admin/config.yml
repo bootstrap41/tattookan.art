@@ -22,12 +22,7 @@ collections:
             widget: "list"
             summary: "{{fields.title}} — {{fields.category}}"
             fields:
-              - {
-                  label: "ID (benzersiz numara)",
-                  name: "id",
-                  widget: "number",
-                  hint: "Her çalışma için farklı bir sayı olmalı, örn. 69, 70, 71...",
-                }
+              - { label: "ID (benzersiz numara)", name: "id", widget: "number", hint: "Her çalışma için farklı bir sayı olmalı, örn. 69, 70, 71..." }
               - { label: "Başlık", name: "title", widget: "string" }
               - label: "Kategori"
                 name: "category"
@@ -39,34 +34,10 @@ collections:
                   - { label: "Cover Up", value: "cover-up" }
                   - { label: "Mandala", value: "mandala" }
               - { label: "Görsel", name: "image", widget: "image" }
-              - {
-                  label: "Fiyat (₺)",
-                  name: "basePrice",
-                  widget: "number",
-                  value_type: "int",
-                }
-              - {
-                  label: "İndirim Oranı (%)",
-                  name: "discount",
-                  widget: "number",
-                  value_type: "int",
-                  default: 0,
-                  required: false,
-                }
-              - {
-                  label: "Puan (1-5)",
-                  name: "rating",
-                  widget: "number",
-                  value_type: "float",
-                  default: 5,
-                }
-              - {
-                  label: "Yorum Sayısı",
-                  name: "reviews",
-                  widget: "number",
-                  value_type: "int",
-                  default: 0,
-                }
+              - { label: "Fiyat (₺)", name: "basePrice", widget: "number", value_type: "int" }
+              - { label: "İndirim Oranı (%)", name: "discount", widget: "number", value_type: "int", default: 0, required: false }
+              - { label: "Puan (1-5)", name: "rating", widget: "number", value_type: "float", default: 5 }
+              - { label: "Yorum Sayısı", name: "reviews", widget: "number", value_type: "int", default: 0 }
               - { label: "Açıklama", name: "description", widget: "text" }
 
   - name: "portfolyo"
@@ -83,9 +54,4 @@ collections:
             fields:
               - { label: "İsim", name: "name", widget: "string" }
               - { label: "Görsel", name: "image", widget: "image" }
-              - {
-                  label: "Açıklama",
-                  name: "description",
-                  widget: "text",
-                  required: false,
-                }
+              - { label: "Açıklama", name: "description", widget: "text", required: false }
