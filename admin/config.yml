@@ -53,5 +53,9 @@ collections:
             summary: "{{fields.name}}"
             fields:
               - { label: "İsim", name: "name", widget: "string" }
-              - { label: "Görsel", name: "image", widget: "image" }
+              - label: "Görseller (farklı açılar eklenebilir)"
+                name: "images"
+                widget: "list"
+                field: { label: "Görsel", name: "image", widget: "image" }
+                hint: "İlk eklediğin görsel kapak fotoğrafı olarak kullanılır, diğerleri galeri içinde gösterilir."
               - { label: "Açıklama", name: "description", widget: "text", required: false }
