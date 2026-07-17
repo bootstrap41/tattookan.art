@@ -285,7 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((data) => {
       // style ve reference artık JSON'da tutulmaz.
       // Kategori ve görsel dosya adından otomatik üretilir.
-      const normalizedData = data.map(normalizeTattoo);
+      const normalizedData = data.models.map(normalizeTattoo);
 
       dailyCampaigns = createDailyCampaigns(normalizedData);
 

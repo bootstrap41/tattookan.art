@@ -1,0 +1,51 @@
+backend:
+  name: github
+  repo: bootstrap41/tattookan.art
+  branch: main
+  base_url: https://tattookan-decap-auth.tattookan-art.workers.dev
+
+locale: "tr"
+
+media_folder: "assets/images/uploads"
+public_folder: "assets/images/uploads"
+
+collections:
+  - name: "modeller"
+    label: "Modeller"
+    file: "data/tattoos.json"
+    fields:
+      - label: "Çalışmalar"
+        name: "models"
+        widget: "list"
+        summary: "{{fields.title}} — {{fields.category}}"
+        fields:
+          - { label: "ID (benzersiz numara)", name: "id", widget: "number", hint: "Her çalışma için farklı bir sayı olmalı, örn. 69, 70, 71..." }
+          - { label: "Başlık", name: "title", widget: "string" }
+          - label: "Kategori"
+            name: "category"
+            widget: "select"
+            options:
+              - { label: "Dark Realism", value: "dark-realism" }
+              - { label: "Fine Line", value: "fine-line" }
+              - { label: "Minimal", value: "minimal" }
+              - { label: "Cover Up", value: "cover-up" }
+              - { label: "Mandala", value: "mandala" }
+          - { label: "Görsel", name: "image", widget: "image" }
+          - { label: "Fiyat (₺)", name: "basePrice", widget: "number", value_type: "int" }
+          - { label: "İndirim Oranı (%)", name: "discount", widget: "number", value_type: "int", default: 0, required: false }
+          - { label: "Puan (1-5)", name: "rating", widget: "number", value_type: "float", default: 5 }
+          - { label: "Yorum Sayısı", name: "reviews", widget: "number", value_type: "int", default: 0 }
+          - { label: "Açıklama", name: "description", widget: "text" }
+
+  - name: "portfolyo"
+    label: "Portfolyo"
+    file: "data/portfolyo.json"
+    fields:
+      - label: "Çalışmalar"
+        name: "items"
+        widget: "list"
+        summary: "{{fields.name}}"
+        fields:
+          - { label: "İsim", name: "name", widget: "string" }
+          - { label: "Görsel", name: "image", widget: "image" }
+          - { label: "Açıklama", name: "description", widget: "text", required: false }

@@ -4,7 +4,7 @@ importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 
 // Site içeriği değiştiğinde bu ismi artırman gerekiyor (v1 -> v2 -> v3...),
 // aksi halde ziyaretçilerin tarayıcısı eski önbelleği kullanmaya devam eder.
-const CACHE_NAME = "tattookan-v21";
+const CACHE_NAME = "tattookan-v22";
 
 const urlsToCache = [
   "./",
@@ -12,9 +12,11 @@ const urlsToCache = [
   "./style.css",
   "./script.js",
   "./data/tattoos.json",
+  "./data/portfolyo.json",
   "./hakkimizda.html",
   "./gizlilik-politikasi.html",
   "./hediye-cekleri.html",
+  "./portfolyo.html",
 ];
 
 // Kurulum
@@ -54,13 +56,26 @@ self.addEventListener("fetch", (event) => {
   }
 
   const requestUrl = new URL(event.request.url);
+
+  // Admin panel (Decap CMS) ve onun GitHub/Cloudflare Worker/unpkg.com gibi
+  // dış kaynaklara yaptığı istekler bu service worker'a hiç uğramasın —
+  // hem her zaman en güncel admin arayüzünü göstermesi için, hem de
+  // GitHub API çağrılarını yanlışlıkla önbelleğe alıp bozmamak için.
+  if (
+    requestUrl.pathname.startsWith("/admin/") ||
+    requestUrl.origin !== self.location.origin
+  ) {
+    return;
+  }
   const isDynamicFile =
     requestUrl.pathname.endsWith("/script.js") ||
     requestUrl.pathname.endsWith("/data/tattoos.json") ||
+    requestUrl.pathname.endsWith("/data/portfolyo.json") ||
     requestUrl.pathname.endsWith("/index.html") ||
     requestUrl.pathname.endsWith("/hakkimizda.html") ||
     requestUrl.pathname.endsWith("/gizlilik-politikasi.html") ||
     requestUrl.pathname.endsWith("/hediye-cekleri.html") ||
+    requestUrl.pathname.endsWith("/portfolyo.html") ||
     requestUrl.pathname === "/";
 
   if (isDynamicFile) {
