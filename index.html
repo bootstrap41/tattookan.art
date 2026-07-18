@@ -380,6 +380,10 @@ href="assets/icons/icon-192-v2.png">
         <i class="fas fa-wand-magic-sparkles"></i>
     </button>
 
+    <button type="button" id="giftFloatBtn" class="gift-float-btn" title="Haftalık Hediye Dövme">
+        <i class="fas fa-gift"></i>
+    </button>
+
     <div class="modal fade" id="lightboxModal" tabindex="-1">
 
     <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -597,6 +601,85 @@ href="assets/icons/icon-192-v2.png">
                 </div>
 
                 <div id="aiDesignError" class="text-gold small mt-3" style="display:none;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Haftalık Hediye Dövme Penceresi -->
+<div class="modal fade" id="giftModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content premium-modal" style="padding: 20px;">
+            <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                style="position:absolute; top:16px; right:16px; z-index:10;">
+            </button>
+
+            <div class="text-center py-3">
+                <div id="giftLoadingState">
+                    <div class="spinner-border text-gold my-4" role="status"></div>
+                    <p class="text-white">Yükleniyor...</p>
+                </div>
+
+                <div id="giftContentState" style="display:none;">
+                    <div class="premium-card mb-3" style="max-width: 320px; margin: 0 auto;">
+                        <div class="card-img-wrapper">
+                            <img id="giftImage" src="" alt="Haftalık hediye dövme" class="tattoo-image">
+                        </div>
+                        <div class="p-3">
+                            <h5 class="text-gold mb-2" id="giftTitle"></h5>
+                            <p class="mb-1">
+                                <span class="text-muted text-decoration-line-through" id="giftOldPrice"></span>
+                            </p>
+                            <p class="mb-0" style="font-size: 1.4rem; font-weight: 700;">
+                                🎉🎉🎉 <span class="text-gold">HEDİYE</span> 🎉🎉🎉
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="giftAvailableArea">
+                        <div class="search-box mb-3 text-start">
+                            <i class="fas fa-user text-gold"></i>
+                            <input
+                                type="text"
+                                id="giftName"
+                                class="form-control premium-input"
+                                placeholder="Adın Soyadın">
+                        </div>
+                        <div class="search-box mb-3 text-start">
+                            <i class="fab fa-whatsapp text-gold"></i>
+                            <input
+                                type="tel"
+                                id="giftPhone"
+                                class="form-control premium-input"
+                                placeholder="Telefon numaran (05XX XXX XX XX)">
+                        </div>
+                        <button type="button" id="giftClaimBtn" class="btn btn-gold">
+                            <i class="fas fa-gift"></i> AL
+                        </button>
+                    </div>
+
+                    <div id="giftClaimedArea" style="display:none;">
+                        <p class="text-white">
+                            Bu haftaki hediye dövme <strong class="text-gold">başka bir talihli</strong> tarafından alındı.
+                            Gelecek hafta tekrar dene!
+                        </p>
+                    </div>
+
+                    <div id="giftSuccessArea" style="display:none;">
+                        <p class="text-gold">
+                            <i class="fas fa-check-circle"></i> Tebrikler, hediyeni kazandın!
+                        </p>
+                        <p class="text-white small">
+                            Bilgilerin stüdyomuza iletildi, randevunu ayarlamak için en kısa sürede
+                            seninle iletişime geçeceğiz.
+                        </p>
+                    </div>
+
+                    <div id="giftErrorArea" class="text-gold small mt-3" style="display:none;"></div>
+                </div>
             </div>
         </div>
     </div>

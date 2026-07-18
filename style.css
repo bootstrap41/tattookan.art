@@ -1770,3 +1770,48 @@ footer .copyright a:hover {
         margin: 0 3px 8px 0;
     }
 }
+
+/* ========================= */
+/* YÜZEN (SÜRÜKLENEBİLİR) HEDİYE BUTONU */
+/* ========================= */
+
+.gift-float-btn {
+    position: fixed;
+    bottom: 100px;
+    left: 30px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #111, #222);
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    z-index: 1000;
+    cursor: grab;
+    touch-action: none;
+    transition: box-shadow 0.2s, transform 0.2s;
+    padding: 0;
+}
+
+.gift-float-btn:hover {
+    box-shadow: 0 0 20px rgba(212,175,55,.5);
+}
+
+.gift-float-btn:active {
+    cursor: grabbing;
+    transform: scale(1.05);
+}
+
+@media (max-width: 576px) {
+    .gift-float-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+        bottom: 90px;
+        left: 20px;
+    }
+}

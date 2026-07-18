@@ -4,7 +4,7 @@ importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 
 // Site içeriği değiştiğinde bu ismi artırman gerekiyor (v1 -> v2 -> v3...),
 // aksi halde ziyaretçilerin tarayıcısı eski önbelleği kullanmaya devam eder.
-const CACHE_NAME = "tattookan-v49";
+const CACHE_NAME = "tattookan-v50";
 
 const urlsToCache = [
   "./",
@@ -17,6 +17,7 @@ const urlsToCache = [
   "./data/yorumlar.json",
   "./data/settings.json",
   "./data/hediye-tutarlari.json",
+  "./data/haftalik-hediye.json",
   "./hakkimizda.html",
   "./gizlilik-politikasi.html",
   "./hediye-cekleri.html",
@@ -79,6 +80,7 @@ self.addEventListener("fetch", (event) => {
     requestUrl.pathname.endsWith("/data/yorumlar.json") ||
     requestUrl.pathname.endsWith("/data/settings.json") ||
     requestUrl.pathname.endsWith("/data/hediye-tutarlari.json") ||
+    requestUrl.pathname.endsWith("/data/haftalik-hediye.json") ||
     requestUrl.pathname.endsWith("/index.html") ||
     requestUrl.pathname.endsWith("/hakkimizda.html") ||
     requestUrl.pathname.endsWith("/gizlilik-politikasi.html") ||

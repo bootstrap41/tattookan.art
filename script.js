@@ -1166,11 +1166,12 @@ ${
     });
   }
 
-  // Yüzen AI Tasarım butonu — WhatsApp butonu gibi ekranda sabit (fixed)
-  // duruyor, ama basılı tutup sürükleyerek ekranın istenen yerine taşınabiliyor.
-  const aiDesignFloatBtn = document.getElementById("aiDesignFloatBtn");
+  // Yüzen butonlar (AI Tasarım, Hediye) — WhatsApp butonu gibi ekranda
+  // sabit (fixed) duruyor, ama basılı tutup sürükleyerek ekranın istenen
+  // yerine taşınabiliyor. Ortak mantığı tek bir fonksiyonda topluyoruz.
+  function makeFloatButtonDraggable(el, onTap) {
+    if (!el) return;
 
-  if (aiDesignFloatBtn) {
     let isDragging = false;
     let wasDragged = false;
     let startX = 0;
@@ -1179,7 +1180,7 @@ ${
     let startTop = 0;
 
     function startDrag(clientX, clientY) {
-      const rect = aiDesignFloatBtn.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
 
       startLeft = rect.left;
       startTop = rect.top;
@@ -1188,12 +1189,12 @@ ${
       isDragging = true;
       wasDragged = false;
 
-      // Sabit bottom/right konumundan, serbest top/left konumuna geçiyoruz
-      // ki sürüklerken ekranın her yerine taşınabilsin.
-      aiDesignFloatBtn.style.left = `${startLeft}px`;
-      aiDesignFloatBtn.style.top = `${startTop}px`;
-      aiDesignFloatBtn.style.right = "auto";
-      aiDesignFloatBtn.style.bottom = "auto";
+      // Sabit bottom/right (ya da left) konumundan, serbest top/left
+      // konumuna geçiyoruz ki sürüklerken ekranın her yerine taşınabilsin.
+      el.style.left = `${startLeft}px`;
+      el.style.top = `${startTop}px`;
+      el.style.right = "auto";
+      el.style.bottom = "auto";
     }
 
     function moveDrag(clientX, clientY) {
@@ -1206,28 +1207,28 @@ ${
         wasDragged = true;
       }
 
-      const maxLeft = window.innerWidth - aiDesignFloatBtn.offsetWidth;
-      const maxTop = window.innerHeight - aiDesignFloatBtn.offsetHeight;
+      const maxLeft = window.innerWidth - el.offsetWidth;
+      const maxTop = window.innerHeight - el.offsetHeight;
 
       const newLeft = Math.min(Math.max(0, startLeft + dx), maxLeft);
       const newTop = Math.min(Math.max(0, startTop + dy), maxTop);
 
-      aiDesignFloatBtn.style.left = `${newLeft}px`;
-      aiDesignFloatBtn.style.top = `${newTop}px`;
+      el.style.left = `${newLeft}px`;
+      el.style.top = `${newTop}px`;
     }
 
     function endDrag() {
       isDragging = false;
     }
 
-    aiDesignFloatBtn.addEventListener("mousedown", (e) => {
+    el.addEventListener("mousedown", (e) => {
       e.preventDefault();
       startDrag(e.clientX, e.clientY);
     });
     document.addEventListener("mousemove", (e) => moveDrag(e.clientX, e.clientY));
     document.addEventListener("mouseup", endDrag);
 
-    aiDesignFloatBtn.addEventListener(
+    el.addEventListener(
       "touchstart",
       (e) => {
         const touch = e.touches[0];
@@ -1247,13 +1248,16 @@ ${
     document.addEventListener("touchend", endDrag);
 
     // Sürükleme bittiğinde tıklama (click) olayı da tetiklenebiliyor —
-    // gerçekten sürüklendiyse pencereyi açmıyoruz, sadece taşımayla kalıyoruz.
-    aiDesignFloatBtn.addEventListener("click", () => {
+    // gerçekten sürüklendiyse açmıyoruz, sadece taşımayla kalıyoruz.
+    el.addEventListener("click", () => {
       if (wasDragged) return;
 
-      openAiDesignModal("");
+      onTap();
     });
   }
+
+  const aiDesignFloatBtn = document.getElementById("aiDesignFloatBtn");
+  makeFloatButtonDraggable(aiDesignFloatBtn, () => openAiDesignModal(""));
 
   if (aiDesignSubmitBtn) {
     aiDesignSubmitBtn.addEventListener("click", () => {
@@ -1350,6 +1354,136 @@ ${
           aiDesignFormArea.style.display = "block";
           aiDesignError.textContent = "Bağlantı hatası oluştu, lütfen tekrar dene.";
           aiDesignError.style.display = "block";
+        });
+    });
+  }
+
+  // === HAFTALIK HEDİYE DÖVME ===
+
+  const giftFloatBtn = document.getElementById("giftFloatBtn");
+  const giftLoadingState = document.getElementById("giftLoadingState");
+  const giftContentState = document.getElementById("giftContentState");
+  const giftAvailableArea = document.getElementById("giftAvailableArea");
+  const giftClaimedArea = document.getElementById("giftClaimedArea");
+  const giftSuccessArea = document.getElementById("giftSuccessArea");
+  const giftErrorArea = document.getElementById("giftErrorArea");
+  const giftClaimBtn = document.getElementById("giftClaimBtn");
+
+  let currentGiftData = null;
+
+  function openGiftModal() {
+    giftLoadingState.style.display = "block";
+    giftContentState.style.display = "none";
+    giftAvailableArea.style.display = "none";
+    giftClaimedArea.style.display = "none";
+    giftSuccessArea.style.display = "none";
+    giftErrorArea.style.display = "none";
+
+    const giftModal = new bootstrap.Modal(document.getElementById("giftModal"));
+
+    giftModal.show();
+
+    fetch("./data/haftalik-hediye.json")
+      .then((r) => r.json())
+      .then((giftData) => {
+        currentGiftData = giftData;
+
+        if (!giftData.image || !giftData.title) {
+          giftLoadingState.style.display = "none";
+          giftErrorArea.textContent = "Şu an aktif bir hediye kampanyası yok, yakında tekrar kontrol et!";
+          giftErrorArea.style.display = "block";
+          giftContentState.style.display = "block";
+          return Promise.reject(new Error("no-active-gift"));
+        }
+
+        return fetch(
+          `${AI_DESIGN_WORKER_URL}/gift-status?giftId=${encodeURIComponent(giftData.giftId)}`,
+        ).then((r) => r.json());
+      })
+      .then((statusData) => {
+        const giftData = currentGiftData;
+
+        giftLoadingState.style.display = "none";
+
+        document.getElementById("giftImage").src = giftData.image;
+        document.getElementById("giftTitle").textContent = giftData.title;
+        document.getElementById("giftOldPrice").textContent =
+          Number(giftData.price).toLocaleString("tr-TR") + "₺";
+
+        giftContentState.style.display = "block";
+
+        if (statusData && statusData.claimed) {
+          giftClaimedArea.style.display = "block";
+        } else {
+          giftAvailableArea.style.display = "block";
+        }
+      })
+      .catch((error) => {
+        if (error && error.message === "no-active-gift") return;
+
+        giftLoadingState.style.display = "none";
+        giftContentState.style.display = "block";
+        giftErrorArea.textContent = "Hediye bilgisi yüklenemedi, lütfen tekrar dene.";
+        giftErrorArea.style.display = "block";
+      });
+  }
+
+  makeFloatButtonDraggable(giftFloatBtn, openGiftModal);
+
+  if (giftClaimBtn) {
+    giftClaimBtn.addEventListener("click", () => {
+      const name = document.getElementById("giftName").value.trim();
+      const phone = document.getElementById("giftPhone").value.trim();
+
+      if (!name) {
+        giftErrorArea.textContent = "Lütfen adını yaz.";
+        giftErrorArea.style.display = "block";
+        return;
+      }
+
+      const normalizedPhone = phone.replace(/[\s()-]/g, "");
+      const turkishPhoneRegex = /^(\+90|0090|90|0)?5\d{9}$/;
+
+      if (!phone || !turkishPhoneRegex.test(normalizedPhone)) {
+        giftErrorArea.textContent = "Lütfen geçerli bir Türkiye cep telefonu numarası gir.";
+        giftErrorArea.style.display = "block";
+        return;
+      }
+
+      giftErrorArea.style.display = "none";
+      giftClaimBtn.disabled = true;
+      giftClaimBtn.textContent = "Gönderiliyor...";
+
+      fetch(`${AI_DESIGN_WORKER_URL}/gift-claim`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          giftId: currentGiftData ? currentGiftData.giftId : "",
+          name,
+          phone,
+        }),
+      })
+        .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+        .then(({ ok, data }) => {
+          giftClaimBtn.disabled = false;
+          giftClaimBtn.innerHTML = '<i class="fas fa-gift"></i> AL';
+
+          if (!ok) {
+            giftAvailableArea.style.display = "none";
+            giftClaimedArea.style.display = "block";
+            giftErrorArea.textContent = data.error || "";
+            giftErrorArea.style.display = data.error ? "block" : "none";
+            return;
+          }
+
+          giftAvailableArea.style.display = "none";
+          giftSuccessArea.style.display = "block";
+        })
+        .catch(() => {
+          giftClaimBtn.disabled = false;
+          giftClaimBtn.innerHTML = '<i class="fas fa-gift"></i> AL';
+          giftErrorArea.textContent = "Bağlantı hatası oluştu, lütfen tekrar dene.";
+          giftErrorArea.style.display = "block";
         });
     });
   }

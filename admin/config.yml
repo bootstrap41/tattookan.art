@@ -131,3 +131,18 @@ collections:
             fields:
               - { label: "Tutar (₺)", name: "amount", widget: "number", value_type: "int" }
               - { label: "Açıklama", name: "note", widget: "string" }
+
+  - name: "haftalikHediye"
+    label: "Haftalık Hediye Dövme"
+    files:
+      - name: "haftalik_hediye_dosyasi"
+        label: "Haftalık Hediye"
+        file: "data/haftalik-hediye.json"
+        fields:
+          - label: "Hediye Kodu"
+            name: "giftId"
+            widget: "string"
+            hint: "Her yeni hediyede bu kodu MUTLAKA değiştir (örn. tarihi yaz: 2026-07-27). Değiştirmezsen sistem eski haftanın 'alındı' durumunu hatırlamaya devam eder ve kimse yeni hediyeyi alamaz."
+          - { label: "Görsel", name: "image", widget: "image" }
+          - { label: "Başlık", name: "title", widget: "string" }
+          - { label: "Normal Fiyat (₺, üzeri çizili gösterilecek)", name: "price", widget: "number", value_type: "int" }
