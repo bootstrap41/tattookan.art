@@ -21,6 +21,7 @@ window.addEventListener("load", function () {
 document.addEventListener("DOMContentLoaded", () => {
   let tattoos = [];
   let dailyCampaigns = [];
+  let currentAiDesignReference = "";
 
   // Ayarlar yüklenene kadar (ya da yüklenemezse) kullanılacak varsayılanlar
   let siteSettings = {
@@ -1023,21 +1024,12 @@ ${
 
     document.getElementById("lightboxWhatsapp").href =
       `https://wa.me/${siteSettings.whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
-    const aiMessage = encodeURIComponent(
-      `Merhaba Tattookan.art,
 
-AI destekli özel dövme tasarımı hakkında bilgi almak istiyorum.
-
-Referans çalışma:
-${hasDistinctTitle ? `${itemReference} - ${item.title}` : itemReference}
-
-Bu tarzdan ilham alarak bana özel bir tasarım oluşturabilir miyiz?
-
-Teşekkür ederim.`,
-    );
-
-    document.getElementById("aiDesignRequest").href =
-      `https://wa.me/${siteSettings.whatsappNumber}?text=${aiMessage}`;
+    // AI Tasarım penceresi açıldığında hangi çalışmadan ilham alındığını
+    // gösterebilmek için referansı burada saklıyoruz.
+    currentAiDesignReference = hasDistinctTitle
+      ? `${itemReference} - ${item.title}`
+      : itemReference;
 
     const modal = new bootstrap.Modal(document.getElementById("lightboxModal"));
 
@@ -1112,6 +1104,115 @@ Teşekkür ederim.`,
   // setInterval çağrısı da burada olmalı, aksi halde fonksiyon
   // görünmez ve geri sayım hiç tetiklenmez (sabit kalır).
   setInterval(updateCampaignCountdowns, 1000);
+
+  // === AI TASARIM TALEBİ ===
+
+  const AI_DESIGN_WORKER_URL = "https://tattookan-ai-tasarim.tattookan-art.workers.dev";
+
+  const aiDesignRequestBtn = document.getElementById("aiDesignRequest");
+  const aiDesignSubmitBtn = document.getElementById("aiDesignSubmit");
+  const aiDesignFormArea = document.getElementById("aiDesignFormArea");
+  const aiDesignLoading = document.getElementById("aiDesignLoading");
+  const aiDesignResult = document.getElementById("aiDesignResult");
+  const aiDesignError = document.getElementById("aiDesignError");
+  const aiDesignReference = document.getElementById("aiDesignReference");
+
+  function resetAiDesignModal() {
+    if (aiDesignFormArea) aiDesignFormArea.style.display = "block";
+    if (aiDesignLoading) aiDesignLoading.style.display = "none";
+    if (aiDesignResult) aiDesignResult.style.display = "none";
+    if (aiDesignError) aiDesignError.style.display = "none";
+  }
+
+  if (aiDesignRequestBtn) {
+    aiDesignRequestBtn.addEventListener("click", () => {
+      resetAiDesignModal();
+
+      if (aiDesignReference) {
+        aiDesignReference.textContent = currentAiDesignReference
+          ? `İlham alınan çalışma: ${currentAiDesignReference}`
+          : "";
+      }
+
+      // Lightbox açıksa kapatıp AI Tasarım penceresini açıyoruz.
+      const lightboxEl = document.getElementById("lightboxModal");
+      const lightboxInstance = bootstrap.Modal.getInstance(lightboxEl);
+
+      if (lightboxInstance) {
+        lightboxInstance.hide();
+      }
+
+      const aiModal = new bootstrap.Modal(document.getElementById("aiDesignModal"));
+
+      aiModal.show();
+    });
+  }
+
+  if (aiDesignSubmitBtn) {
+    aiDesignSubmitBtn.addEventListener("click", () => {
+      const code = document.getElementById("aiDesignCode").value.trim();
+      const prompt = document.getElementById("aiDesignPrompt").value.trim();
+      const contact = document.getElementById("aiDesignContact").value.trim();
+
+      if (!code) {
+        aiDesignError.textContent = "Lütfen tasarım kodunu gir.";
+        aiDesignError.style.display = "block";
+        return;
+      }
+
+      if (!prompt) {
+        aiDesignError.textContent = "Lütfen ne istediğini kısaca yaz.";
+        aiDesignError.style.display = "block";
+        return;
+      }
+
+      aiDesignFormArea.style.display = "none";
+      aiDesignError.style.display = "none";
+      aiDesignResult.style.display = "none";
+      aiDesignLoading.style.display = "block";
+
+      const fullPrompt = currentAiDesignReference
+        ? `${currentAiDesignReference} çalışmasından ilham alınarak: ${prompt}`
+        : prompt;
+
+      fetch(AI_DESIGN_WORKER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, prompt: fullPrompt, contact }),
+      })
+        .then((res) =>
+          res.json().then((data) => ({ ok: res.ok, data })),
+        )
+        .then(({ ok, data }) => {
+          aiDesignLoading.style.display = "none";
+
+          if (!ok) {
+            aiDesignFormArea.style.display = "block";
+            aiDesignError.textContent = data.error || "Bir şeyler ters gitti, lütfen tekrar dene.";
+            aiDesignError.style.display = "block";
+            return;
+          }
+
+          document.getElementById("aiDesignImage").src = data.image;
+          document.getElementById("aiDesignDownload").href = data.image;
+
+          const whatsappText = encodeURIComponent(
+            `Merhaba, AI ile oluşturduğum bir tasarımım var, bu tasarım hakkında konuşmak istiyorum. (İndirdiğim görseli bu sohbete ekliyorum.)`,
+          );
+
+          document.getElementById("aiDesignWhatsapp").href =
+            `https://wa.me/${siteSettings.whatsappNumber}?text=${whatsappText}`;
+
+          aiDesignResult.style.display = "block";
+        })
+        .catch(() => {
+          aiDesignLoading.style.display = "none";
+          aiDesignFormArea.style.display = "block";
+          aiDesignError.textContent = "Bağlantı hatası oluştu, lütfen tekrar dene.";
+          aiDesignError.style.display = "block";
+        });
+    });
+  }
 
 });
 if ("serviceWorker" in navigator) {

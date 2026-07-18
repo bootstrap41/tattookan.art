@@ -473,15 +473,15 @@ href="assets/icons/icon-192-v2.png">
                     WhatsApp Randevu
 
                     </a>
-                    <a 
-id="aiDesignRequest"
-target="_blank"
-class="btn ai-design-btn mt-3">
+                    <button
+                    type="button"
+                    id="aiDesignRequest"
+                    class="btn ai-design-btn mt-3">
 
-<i class="fas fa-wand-magic-sparkles"></i>
-AI Tasarım Talebi
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                    AI Tasarım Talebi
 
-</a>
+                    </button>
 
 
                 </div>
@@ -494,6 +494,84 @@ AI Tasarım Talebi
 
     </div>
 
+</div>
+
+<!-- AI Tasarım Talebi Penceresi -->
+<div class="modal fade" id="aiDesignModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content premium-modal" style="padding: 20px;">
+            <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                style="position:absolute; top:16px; right:16px; z-index:10;">
+            </button>
+
+            <div class="text-center py-3">
+                <i class="fas fa-wand-magic-sparkles text-gold mb-2" style="font-size: 2rem;"></i>
+                <h3 class="text-gold mb-1">AI ile Tasarımını Oluştur</h3>
+                <p class="text-muted small mb-4" id="aiDesignReference"></p>
+
+                <div id="aiDesignFormArea">
+                    <div class="search-box mb-3 text-start">
+                        <i class="fas fa-key text-gold"></i>
+                        <input
+                            type="text"
+                            id="aiDesignCode"
+                            class="form-control premium-input"
+                            placeholder="Tasarım kodun (stüdyodan aldığın kod)">
+                    </div>
+                    <div class="search-box mb-3 text-start">
+                        <textarea
+                            id="aiDesignPrompt"
+                            class="form-control premium-input"
+                            rows="3"
+                            maxlength="500"
+                            placeholder="Ne istediğini anlat: örn. 'Sol pazıma, kurt başı ve ay motifi, ince çizgili minimal tarzda'"></textarea>
+                    </div>
+                    <div class="search-box mb-3 text-start">
+                        <i class="fab fa-whatsapp text-gold"></i>
+                        <input
+                            type="text"
+                            id="aiDesignContact"
+                            class="form-control premium-input"
+                            placeholder="Telefon numaran (opsiyonel, seninle iletişime geçebilelim)">
+                    </div>
+
+                    <button type="button" id="aiDesignSubmit" class="btn btn-gold">
+                        <i class="fas fa-wand-magic-sparkles"></i> Tasarımı Oluştur
+                    </button>
+                    <p class="text-muted small mt-3 mb-0">
+                        Bir tasarım kodun yoksa WhatsApp'tan bize yazarak edinebilirsin.
+                        Üretilen tasarım stüdyomuza da otomatik olarak iletilir.
+                    </p>
+                </div>
+
+                <div id="aiDesignLoading" style="display:none;">
+                    <div class="spinner-border text-gold my-4" role="status"></div>
+                    <p class="text-muted">Tasarımın oluşturuluyor, bu birkaç saniye sürebilir...</p>
+                </div>
+
+                <div id="aiDesignResult" style="display:none;">
+                    <img id="aiDesignImage" src="" alt="AI tasarım önerisi" class="img-fluid rounded mb-3" style="max-height: 50vh;">
+                    <div>
+                        <a id="aiDesignDownload" href="#" download="tattookan-ai-tasarim.png" class="btn btn-gold me-2">
+                            <i class="fas fa-download"></i> İndir
+                        </a>
+                        <a id="aiDesignWhatsapp" href="#" target="_blank" class="btn ai-design-btn">
+                            <i class="fab fa-whatsapp"></i> WhatsApp'tan Gönder
+                        </a>
+                    </div>
+                    <p class="text-muted small mt-3 mb-0">
+                        Bu görsel gerçek dövme sonucunu birebir yansıtmayabilir, bir fikir/referans niteliğindedir.
+                        Kesin tasarım için stüdyomuzda birlikte netleştiririz.
+                    </p>
+                </div>
+
+                <div id="aiDesignError" class="text-gold small mt-3" style="display:none;"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
