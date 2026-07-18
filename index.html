@@ -126,6 +126,13 @@ href="assets/icons/icon-192-v2.png">
                 <img src="assets/icons/icon-192-v2.png" alt="Tattookan Art logo" class="navbar-logo" width="34" height="34">
                 TATTOOKAN<span class="text-white">.ART</span>
             </a>
+            <button
+                type="button"
+                id="navAiDesignBtn"
+                class="btn btn-sm ai-design-btn ms-2 me-auto"
+                title="AI Tasarım Talebi">
+                <i class="fas fa-wand-magic-sparkles"></i>
+            </button>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -532,24 +539,47 @@ href="assets/icons/icon-192-v2.png">
                     <div class="search-box mb-3 text-start">
                         <i class="fab fa-whatsapp text-gold"></i>
                         <input
-                            type="text"
+                            type="tel"
                             id="aiDesignContact"
+                            required
                             class="form-control premium-input"
-                            placeholder="Telefon numaran (opsiyonel, seninle iletişime geçebilelim)">
+                            placeholder="Telefon numaran (05XX XXX XX XX) - zorunlu">
+                    </div>
+
+                    <div class="text-start mb-3">
+                        <label for="aiDesignPhoto" class="btn ai-design-btn btn-sm mb-2">
+                            <i class="fas fa-camera"></i> Fotoğraf Ekle (opsiyonel)
+                        </label>
+                        <input
+                            type="file"
+                            id="aiDesignPhoto"
+                            accept="image/*"
+                            capture="environment"
+                            style="display:none;">
+                        <div id="aiDesignPhotoPreviewWrapper" style="display:none;">
+                            <img id="aiDesignPhotoPreview" src="" alt="Seçilen fotoğraf" style="max-height:120px; border-radius:8px;" class="mb-2">
+                            <button type="button" id="aiDesignPhotoRemove" class="btn btn-sm btn-outline-light ms-2">
+                                <i class="fas fa-times"></i> Kaldır
+                            </button>
+                        </div>
+                        <p class="text-muted small mb-0">
+                            Fotoğraf eklersen, tasarım kendi kolun/bacağın üzerine işlenmiş şekilde gösterilir.
+                            Eklemezsen düz bir tasarım önerisi alırsın.
+                        </p>
                     </div>
 
                     <button type="button" id="aiDesignSubmit" class="btn btn-gold">
                         <i class="fas fa-wand-magic-sparkles"></i> Tasarımı Oluştur
                     </button>
                     <p class="text-muted small mt-3 mb-0">
-                        Bir tasarım kodun yoksa WhatsApp'tan bize yazarak edinebilirsin.
+                        Bir tasarım kodun yoksa WhatsApp'tan bize yazarak edinebilirsin (100₺ karşılığında 3 hak).
                         Üretilen tasarım stüdyomuza da otomatik olarak iletilir.
                     </p>
                 </div>
 
                 <div id="aiDesignLoading" style="display:none;">
                     <div class="spinner-border text-gold my-4" role="status"></div>
-                    <p class="text-muted">Tasarımın oluşturuluyor, bu birkaç saniye sürebilir...</p>
+                    <p class="text-muted" id="aiDesignLoadingText">Tasarımın oluşturuluyor, bu birkaç saniye sürebilir...</p>
                 </div>
 
                 <div id="aiDesignResult" style="display:none;">

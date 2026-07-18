@@ -1110,41 +1110,98 @@ ${
   const AI_DESIGN_WORKER_URL = "https://tattookan-ai-tasarim.tattookan-art.workers.dev";
 
   const aiDesignRequestBtn = document.getElementById("aiDesignRequest");
+  const navAiDesignBtn = document.getElementById("navAiDesignBtn");
   const aiDesignSubmitBtn = document.getElementById("aiDesignSubmit");
   const aiDesignFormArea = document.getElementById("aiDesignFormArea");
   const aiDesignLoading = document.getElementById("aiDesignLoading");
   const aiDesignResult = document.getElementById("aiDesignResult");
   const aiDesignError = document.getElementById("aiDesignError");
   const aiDesignReference = document.getElementById("aiDesignReference");
+  const aiDesignPhotoInput = document.getElementById("aiDesignPhoto");
+  const aiDesignPhotoPreviewWrapper = document.getElementById("aiDesignPhotoPreviewWrapper");
+  const aiDesignPhotoPreview = document.getElementById("aiDesignPhotoPreview");
+  const aiDesignPhotoRemove = document.getElementById("aiDesignPhotoRemove");
+
+  let selectedPhotoDataUrl = null;
 
   function resetAiDesignModal() {
     if (aiDesignFormArea) aiDesignFormArea.style.display = "block";
     if (aiDesignLoading) aiDesignLoading.style.display = "none";
     if (aiDesignResult) aiDesignResult.style.display = "none";
     if (aiDesignError) aiDesignError.style.display = "none";
+
+    selectedPhotoDataUrl = null;
+
+    if (aiDesignPhotoInput) aiDesignPhotoInput.value = "";
+    if (aiDesignPhotoPreviewWrapper) aiDesignPhotoPreviewWrapper.style.display = "none";
+  }
+
+  if (aiDesignPhotoInput) {
+    aiDesignPhotoInput.addEventListener("change", () => {
+      const file = aiDesignPhotoInput.files && aiDesignPhotoInput.files[0];
+
+      if (!file) return;
+
+      // 8MB üzeri fotoğrafları reddediyoruz, hem hız hem maliyet için.
+      if (file.size > 8 * 1024 * 1024) {
+        aiDesignError.textContent = "Fotoğraf çok büyük, lütfen 8MB'tan küçük bir fotoğraf seç.";
+        aiDesignError.style.display = "block";
+        aiDesignPhotoInput.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        selectedPhotoDataUrl = reader.result;
+        aiDesignPhotoPreview.src = selectedPhotoDataUrl;
+        aiDesignPhotoPreviewWrapper.style.display = "block";
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (aiDesignPhotoRemove) {
+    aiDesignPhotoRemove.addEventListener("click", () => {
+      selectedPhotoDataUrl = null;
+      aiDesignPhotoInput.value = "";
+      aiDesignPhotoPreviewWrapper.style.display = "none";
+    });
+  }
+
+  function openAiDesignModal(referenceText) {
+    resetAiDesignModal();
+
+    if (aiDesignReference) {
+      aiDesignReference.textContent = referenceText
+        ? `İlham alınan çalışma: ${referenceText}`
+        : "";
+    }
+
+    // Lightbox açıksa kapatıp AI Tasarım penceresini açıyoruz.
+    const lightboxEl = document.getElementById("lightboxModal");
+    const lightboxInstance = bootstrap.Modal.getInstance(lightboxEl);
+
+    if (lightboxInstance) {
+      lightboxInstance.hide();
+    }
+
+    const aiModal = new bootstrap.Modal(document.getElementById("aiDesignModal"));
+
+    aiModal.show();
   }
 
   if (aiDesignRequestBtn) {
     aiDesignRequestBtn.addEventListener("click", () => {
-      resetAiDesignModal();
+      openAiDesignModal(currentAiDesignReference);
+    });
+  }
 
-      if (aiDesignReference) {
-        aiDesignReference.textContent = currentAiDesignReference
-          ? `İlham alınan çalışma: ${currentAiDesignReference}`
-          : "";
-      }
-
-      // Lightbox açıksa kapatıp AI Tasarım penceresini açıyoruz.
-      const lightboxEl = document.getElementById("lightboxModal");
-      const lightboxInstance = bootstrap.Modal.getInstance(lightboxEl);
-
-      if (lightboxInstance) {
-        lightboxInstance.hide();
-      }
-
-      const aiModal = new bootstrap.Modal(document.getElementById("aiDesignModal"));
-
-      aiModal.show();
+  if (navAiDesignBtn) {
+    // Navbar'daki genel buton, belirli bir çalışmadan bağımsız açılıyor.
+    navAiDesignBtn.addEventListener("click", () => {
+      openAiDesignModal("");
     });
   }
 
@@ -1166,10 +1223,34 @@ ${
         return;
       }
 
+      // Türkiye cep telefonu formatı doğrulaması: 05XXXXXXXXX ya da +905XXXXXXXXX
+      // gibi varyasyonları kabul ediyoruz; boşluk/tire gibi karakterleri temizleyip kontrol ediyoruz.
+      const normalizedContact = contact.replace(/[\s()-]/g, "");
+      const turkishPhoneRegex = /^(\+90|0090|90|0)?5\d{9}$/;
+
+      if (!contact) {
+        aiDesignError.textContent = "Telefon numaran zorunlu, seninle iletişime geçebilmemiz için gerekli.";
+        aiDesignError.style.display = "block";
+        return;
+      }
+
+      if (!turkishPhoneRegex.test(normalizedContact)) {
+        aiDesignError.textContent = "Lütfen geçerli bir Türkiye cep telefonu numarası gir (örn. 05XX XXX XX XX).";
+        aiDesignError.style.display = "block";
+        return;
+      }
+
       aiDesignFormArea.style.display = "none";
       aiDesignError.style.display = "none";
       aiDesignResult.style.display = "none";
       aiDesignLoading.style.display = "block";
+
+      const aiDesignLoadingText = document.getElementById("aiDesignLoadingText");
+      if (aiDesignLoadingText) {
+        aiDesignLoadingText.textContent = selectedPhotoDataUrl
+          ? "Fotoğrafın üzerine tasarım işleniyor, bu biraz sürebilir..."
+          : "Tasarımın oluşturuluyor, bu birkaç saniye sürebilir...";
+      }
 
       const fullPrompt = currentAiDesignReference
         ? `${currentAiDesignReference} çalışmasından ilham alınarak: ${prompt}`
@@ -1178,7 +1259,12 @@ ${
       fetch(AI_DESIGN_WORKER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, prompt: fullPrompt, contact }),
+        body: JSON.stringify({
+          code,
+          prompt: fullPrompt,
+          contact,
+          image: selectedPhotoDataUrl || undefined,
+        }),
       })
         .then((res) =>
           res.json().then((data) => ({ ok: res.ok, data })),
