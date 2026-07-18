@@ -1715,3 +1715,24 @@ footer .copyright a:hover {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* ========================= */
+/* NAVBAR AI TASARIM BUTONU (KÜÇÜK İKON BUTON) */
+/* ========================= */
+
+#navAiDesignBtn {
+    padding: 6px 10px !important;
+    font-size: 14px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+@media (max-width: 576px) {
+    #navAiDesignBtn {
+        padding: 5px 8px !important;
+        font-size: 12px;
+    }
+}
