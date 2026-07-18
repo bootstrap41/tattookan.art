@@ -1116,57 +1116,16 @@ ${
   const aiDesignResult = document.getElementById("aiDesignResult");
   const aiDesignError = document.getElementById("aiDesignError");
   const aiDesignReference = document.getElementById("aiDesignReference");
-  const aiDesignPhotoInput = document.getElementById("aiDesignPhoto");
-  const aiDesignPhotoPreviewWrapper = document.getElementById("aiDesignPhotoPreviewWrapper");
-  const aiDesignPhotoPreview = document.getElementById("aiDesignPhotoPreview");
-  const aiDesignPhotoRemove = document.getElementById("aiDesignPhotoRemove");
 
-  let selectedPhotoDataUrl = null;
+  // Not: Fotoğraf yükleme özelliği, OpenAI'nin gerçek insan fotoğraflarını
+  // düzenleme konusundaki katı güvenlik politikası nedeniyle güvenilir
+  // çalışmadığı için devre dışı bırakıldı (bkz. index.html'deki pasif buton).
 
   function resetAiDesignModal() {
     if (aiDesignFormArea) aiDesignFormArea.style.display = "block";
     if (aiDesignLoading) aiDesignLoading.style.display = "none";
     if (aiDesignResult) aiDesignResult.style.display = "none";
     if (aiDesignError) aiDesignError.style.display = "none";
-
-    selectedPhotoDataUrl = null;
-
-    if (aiDesignPhotoInput) aiDesignPhotoInput.value = "";
-    if (aiDesignPhotoPreviewWrapper) aiDesignPhotoPreviewWrapper.style.display = "none";
-  }
-
-  if (aiDesignPhotoInput) {
-    aiDesignPhotoInput.addEventListener("change", () => {
-      const file = aiDesignPhotoInput.files && aiDesignPhotoInput.files[0];
-
-      if (!file) return;
-
-      // 8MB üzeri fotoğrafları reddediyoruz, hem hız hem maliyet için.
-      if (file.size > 8 * 1024 * 1024) {
-        aiDesignError.textContent = "Fotoğraf çok büyük, lütfen 8MB'tan küçük bir fotoğraf seç.";
-        aiDesignError.style.display = "block";
-        aiDesignPhotoInput.value = "";
-        return;
-      }
-
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        selectedPhotoDataUrl = reader.result;
-        aiDesignPhotoPreview.src = selectedPhotoDataUrl;
-        aiDesignPhotoPreviewWrapper.style.display = "block";
-      };
-
-      reader.readAsDataURL(file);
-    });
-  }
-
-  if (aiDesignPhotoRemove) {
-    aiDesignPhotoRemove.addEventListener("click", () => {
-      selectedPhotoDataUrl = null;
-      aiDesignPhotoInput.value = "";
-      aiDesignPhotoPreviewWrapper.style.display = "none";
-    });
   }
 
   function openAiDesignModal(referenceText) {
@@ -1338,9 +1297,7 @@ ${
 
       const aiDesignLoadingText = document.getElementById("aiDesignLoadingText");
       if (aiDesignLoadingText) {
-        aiDesignLoadingText.textContent = selectedPhotoDataUrl
-          ? "Fotoğrafın üzerine tasarım işleniyor, bu biraz sürebilir..."
-          : "Tasarımın oluşturuluyor, bu birkaç saniye sürebilir...";
+        aiDesignLoadingText.textContent = "Tasarımın oluşturuluyor, bu birkaç saniye sürebilir...";
       }
 
       const fullPrompt = currentAiDesignReference
@@ -1350,12 +1307,7 @@ ${
       fetch(AI_DESIGN_WORKER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code,
-          prompt: fullPrompt,
-          contact,
-          image: selectedPhotoDataUrl || undefined,
-        }),
+        body: JSON.stringify({ code, prompt: fullPrompt, contact }),
       })
         .then((res) =>
           res.json().then((data) => ({ ok: res.ok, data })),

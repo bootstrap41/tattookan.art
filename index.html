@@ -549,31 +549,26 @@ href="assets/icons/icon-192-v2.png">
                     </div>
 
                     <div class="text-start mb-3">
-                        <label for="aiDesignPhoto" class="btn ai-design-btn btn-sm mb-2">
-                            <i class="fas fa-camera"></i> Fotoğraf Ekle (opsiyonel)
+                        <label for="aiDesignPhoto" class="btn ai-design-btn btn-sm mb-2" style="opacity:0.5; cursor:not-allowed;">
+                            <i class="fas fa-camera"></i> Fotoğraf Ekle
                         </label>
                         <input
                             type="file"
                             id="aiDesignPhoto"
                             accept="image/*"
                             capture="environment"
+                            disabled
                             style="display:none;">
-                        <div id="aiDesignPhotoPreviewWrapper" style="display:none;">
-                            <img id="aiDesignPhotoPreview" src="" alt="Seçilen fotoğraf" style="max-height:120px; border-radius:8px;" class="mb-2">
-                            <button type="button" id="aiDesignPhotoRemove" class="btn btn-sm btn-outline-light ms-2">
-                                <i class="fas fa-times"></i> Kaldır
-                            </button>
-                        </div>
                         <p class="text-muted small mb-0">
-                            Fotoğraf eklersen, tasarım kendi kolun/bacağın üzerine işlenmiş şekilde gösterilir.
-                            Eklemezsen düz bir tasarım önerisi alırsın.
+                            Kişisel verilerin gizliliği nedeniyle fotoğraf yükleme özelliği şu an kapalıdır,
+                            sadece metinden tasarım oluşturulabilir.
                         </p>
                     </div>
 
                     <button type="button" id="aiDesignSubmit" class="btn btn-gold">
                         <i class="fas fa-wand-magic-sparkles"></i> Tasarımı Oluştur
                     </button>
-                    <p class="text-muted small mt-3 mb-0">
+                    <p class="text-white small mt-3 mb-0">
                         Bir tasarım kodun yoksa WhatsApp'tan bize yazarak edinebilirsin (100₺ karşılığında 3 hak).
                         Üretilen tasarım stüdyomuza da otomatik olarak iletilir.
                     </p>
