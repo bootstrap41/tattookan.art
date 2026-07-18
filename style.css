@@ -1760,3 +1760,13 @@ footer .copyright a:hover {
         right: 20px;
     }
 }
+
+/* Model filtre butonları, orta genişlikteki ekranlarda tek satıra daha
+   kolay sığsın diye biraz daha kompakt */
+@media (min-width: 768px) and (max-width: 991px) {
+    .btn-filter {
+        padding: 5px 12px;
+        font-size: 0.78rem;
+        margin: 0 3px 8px 0;
+    }
+}
