@@ -33,6 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
       "cover-up": 25,
       mandala: 20,
     },
+    googleRating: {
+      ratingValue: "5.0",
+      reviewCount: "189",
+    },
   };
 
   const grid = document.getElementById("tattoo-grid");
@@ -290,6 +294,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function updateBusinessSchemaRating() {
+    const schemaTag = document.getElementById("business-schema");
+
+    if (!schemaTag) return;
+
+    try {
+      const schema = JSON.parse(schemaTag.textContent);
+
+      schema.aggregateRating = {
+        "@type": "AggregateRating",
+        ratingValue: siteSettings.googleRating.ratingValue,
+        reviewCount: siteSettings.googleRating.reviewCount,
+        bestRating: "5",
+      };
+
+      schemaTag.textContent = JSON.stringify(schema);
+    } catch (error) {
+      console.error("İşletme schema'sı güncellenemedi:", error);
+    }
+  }
+
   function renderFAQ(items) {
     const faqAccordion = document.getElementById("faqAccordion");
 
@@ -315,6 +340,36 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>`;
       })
       .join("");
+
+    injectFAQSchema(items);
+  }
+
+  function injectFAQSchema(items) {
+    const existing = document.getElementById("faq-schema");
+
+    if (existing) {
+      existing.remove();
+    }
+
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: items.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
+    };
+
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.id = "faq-schema";
+    script.textContent = JSON.stringify(schema);
+
+    document.head.appendChild(script);
   }
 
   function renderReviews(items) {
@@ -354,6 +409,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (settingsData) {
         siteSettings = { ...siteSettings, ...settingsData };
       }
+
+      updateBusinessSchemaRating();
 
       if (faqData && faqData.items) {
         renderFAQ(faqData.items);
