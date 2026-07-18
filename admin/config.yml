@@ -109,6 +109,13 @@ collections:
               - { label: "Minimal", name: "minimal", widget: "number", value_type: "int" }
               - { label: "Cover Up", name: "cover-up", widget: "number", value_type: "int" }
               - { label: "Mandala", name: "mandala", widget: "number", value_type: "int" }
+          - label: "Google Puanı (arama sonuçlarındaki yıldız için)"
+            name: "googleRating"
+            widget: "object"
+            hint: "Google İşletme Profili'ndeki gerçek puan/yorum sayısı değiştiğinde burayı güncelle."
+            fields:
+              - { label: "Puan (örn. 5.0)", name: "ratingValue", widget: "string" }
+              - { label: "Toplam Yorum Sayısı", name: "reviewCount", widget: "string" }
 
   - name: "hediyeCekleri"
     label: "Hediye Çeki Tutarları"
