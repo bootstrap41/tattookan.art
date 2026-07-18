@@ -1110,7 +1110,6 @@ ${
   const AI_DESIGN_WORKER_URL = "https://tattookan-ai-tasarim.tattookan-art.workers.dev";
 
   const aiDesignRequestBtn = document.getElementById("aiDesignRequest");
-  const navAiDesignBtn = document.getElementById("navAiDesignBtn");
   const aiDesignSubmitBtn = document.getElementById("aiDesignSubmit");
   const aiDesignFormArea = document.getElementById("aiDesignFormArea");
   const aiDesignLoading = document.getElementById("aiDesignLoading");
@@ -1198,9 +1197,91 @@ ${
     });
   }
 
-  if (navAiDesignBtn) {
-    // Navbar'daki genel buton, belirli bir çalışmadan bağımsız açılıyor.
-    navAiDesignBtn.addEventListener("click", () => {
+  // Yüzen AI Tasarım butonu — WhatsApp butonu gibi ekranda sabit (fixed)
+  // duruyor, ama basılı tutup sürükleyerek ekranın istenen yerine taşınabiliyor.
+  const aiDesignFloatBtn = document.getElementById("aiDesignFloatBtn");
+
+  if (aiDesignFloatBtn) {
+    let isDragging = false;
+    let wasDragged = false;
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let startTop = 0;
+
+    function startDrag(clientX, clientY) {
+      const rect = aiDesignFloatBtn.getBoundingClientRect();
+
+      startLeft = rect.left;
+      startTop = rect.top;
+      startX = clientX;
+      startY = clientY;
+      isDragging = true;
+      wasDragged = false;
+
+      // Sabit bottom/right konumundan, serbest top/left konumuna geçiyoruz
+      // ki sürüklerken ekranın her yerine taşınabilsin.
+      aiDesignFloatBtn.style.left = `${startLeft}px`;
+      aiDesignFloatBtn.style.top = `${startTop}px`;
+      aiDesignFloatBtn.style.right = "auto";
+      aiDesignFloatBtn.style.bottom = "auto";
+    }
+
+    function moveDrag(clientX, clientY) {
+      if (!isDragging) return;
+
+      const dx = clientX - startX;
+      const dy = clientY - startY;
+
+      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+        wasDragged = true;
+      }
+
+      const maxLeft = window.innerWidth - aiDesignFloatBtn.offsetWidth;
+      const maxTop = window.innerHeight - aiDesignFloatBtn.offsetHeight;
+
+      const newLeft = Math.min(Math.max(0, startLeft + dx), maxLeft);
+      const newTop = Math.min(Math.max(0, startTop + dy), maxTop);
+
+      aiDesignFloatBtn.style.left = `${newLeft}px`;
+      aiDesignFloatBtn.style.top = `${newTop}px`;
+    }
+
+    function endDrag() {
+      isDragging = false;
+    }
+
+    aiDesignFloatBtn.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      startDrag(e.clientX, e.clientY);
+    });
+    document.addEventListener("mousemove", (e) => moveDrag(e.clientX, e.clientY));
+    document.addEventListener("mouseup", endDrag);
+
+    aiDesignFloatBtn.addEventListener(
+      "touchstart",
+      (e) => {
+        const touch = e.touches[0];
+        startDrag(touch.clientX, touch.clientY);
+      },
+      { passive: true },
+    );
+    document.addEventListener(
+      "touchmove",
+      (e) => {
+        if (!isDragging) return;
+        const touch = e.touches[0];
+        moveDrag(touch.clientX, touch.clientY);
+      },
+      { passive: true },
+    );
+    document.addEventListener("touchend", endDrag);
+
+    // Sürükleme bittiğinde tıklama (click) olayı da tetiklenebiliyor —
+    // gerçekten sürüklendiyse pencereyi açmıyoruz, sadece taşımayla kalıyoruz.
+    aiDesignFloatBtn.addEventListener("click", () => {
+      if (wasDragged) return;
+
       openAiDesignModal("");
     });
   }
