@@ -134,6 +134,7 @@
                     </button>
                     <div class="carousel-indicators" id="galleryCarouselIndicators" style="position: static; margin-top: 12px;"></div>
                 </div>
+                <p class="text-white px-4 py-3 mb-0" id="galleryModalDescription"></p>
             </div>
         </div>
     </div>
@@ -149,6 +150,7 @@
             if (images.length === 0) return;
 
             document.getElementById("galleryModalTitle").textContent = item.name;
+            document.getElementById("galleryModalDescription").textContent = item.description || "";
 
             document.getElementById("galleryCarouselInner").innerHTML = images
                 .map(
@@ -212,7 +214,7 @@
                                 </div>
                                 <div class="p-4">
                                     <h5 class="text-gold mb-2">${item.name}</h5>
-                                    <p class="style-description">${item.description || ""}</p>
+                                    <p class="style-description description-clamp">${item.description || ""}</p>
                                 </div>
                             </div>
                         </div>`;

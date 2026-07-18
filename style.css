@@ -1703,3 +1703,15 @@ footer .copyright a:hover {
         width: 28px;
     }
 }
+
+/* ========================= */
+/* PORTFOLYO AÇIKLAMA KISALTMA */
+/* ========================= */
+
+.description-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
