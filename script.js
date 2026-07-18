@@ -1178,6 +1178,16 @@ ${
         : "";
     }
 
+    const buyCodeBtn = document.getElementById("aiDesignBuyCodeBtn");
+
+    if (buyCodeBtn) {
+      const buyCodeMessage = encodeURIComponent(
+        "Merhaba, AI Tasarım özelliği için 100₺ karşılığında 3 haklık bir kod almak istiyorum.",
+      );
+
+      buyCodeBtn.href = `https://wa.me/${siteSettings.whatsappNumber}?text=${buyCodeMessage}`;
+    }
+
     // Lightbox açıksa kapatıp AI Tasarım penceresini açıyoruz.
     const lightboxEl = document.getElementById("lightboxModal");
     const lightboxInstance = bootstrap.Modal.getInstance(lightboxEl);
@@ -1362,6 +1372,17 @@ ${
 
           document.getElementById("aiDesignImage").src = data.image;
           document.getElementById("aiDesignDownload").href = data.image;
+
+          const remainingUsesText = document.getElementById("aiDesignRemainingUses");
+
+          if (remainingUsesText) {
+            remainingUsesText.textContent =
+              typeof data.remainingVoucherUses === "number"
+                ? data.remainingVoucherUses > 0
+                  ? `Bu koddan kalan hakkın: ${data.remainingVoucherUses}`
+                  : "Bu kodun hakkı bitti, yeni bir kod almak için bize yazabilirsin."
+                : "";
+          }
 
           const whatsappText = encodeURIComponent(
             `Merhaba, AI ile oluşturduğum bir tasarımım var, bu tasarım hakkında konuşmak istiyorum. (İndirdiğim görseli bu sohbete ekliyorum.)`,
