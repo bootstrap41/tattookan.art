@@ -59,3 +59,68 @@ collections:
                 field: { label: "Görsel", name: "image", widget: "image" }
                 hint: "İlk eklediğin görsel kapak fotoğrafı olarak kullanılır, diğerleri galeri içinde gösterilir."
               - { label: "Açıklama", name: "description", widget: "text", required: false }
+
+  - name: "sss"
+    label: "Sık Sorulan Sorular"
+    files:
+      - name: "sss_dosyasi"
+        label: "SSS"
+        file: "data/faq.json"
+        fields:
+          - label: "Sorular"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.question}}"
+            fields:
+              - { label: "Soru", name: "question", widget: "string" }
+              - { label: "Cevap", name: "answer", widget: "text" }
+
+  - name: "yorumlar"
+    label: "Müşteri Yorumları"
+    files:
+      - name: "yorumlar_dosyasi"
+        label: "Yorumlar"
+        file: "data/yorumlar.json"
+        fields:
+          - label: "Yorumlar"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - { label: "İsim Soyisim", name: "name", widget: "string" }
+              - { label: "Yorum Metni", name: "text", widget: "text" }
+              - { label: "Öne Çıkan Yorum mu? (ortada büyük gösterilir)", name: "featured", widget: "boolean", default: false }
+
+  - name: "ayarlar"
+    label: "Genel Site Ayarları"
+    files:
+      - name: "ayarlar_dosyasi"
+        label: "Genel Ayarlar"
+        file: "data/settings.json"
+        fields:
+          - { label: "WhatsApp Numarası (başında 90 ile, boşluksuz)", name: "whatsappNumber", widget: "string", hint: "Örn. 905388746412" }
+          - { label: "Çalışma Saatleri (yazı olarak)", name: "workingHoursText", widget: "string", hint: "Örn. 10:00 - 23:00" }
+          - label: "Kampanya İndirim Oranları (%)"
+            name: "campaignRates"
+            widget: "object"
+            fields:
+              - { label: "Dark Realism", name: "dark-realism", widget: "number", value_type: "int" }
+              - { label: "Fine Line", name: "fine-line", widget: "number", value_type: "int" }
+              - { label: "Minimal", name: "minimal", widget: "number", value_type: "int" }
+              - { label: "Cover Up", name: "cover-up", widget: "number", value_type: "int" }
+              - { label: "Mandala", name: "mandala", widget: "number", value_type: "int" }
+
+  - name: "hediyeCekleri"
+    label: "Hediye Çeki Tutarları"
+    files:
+      - name: "hediye_dosyasi"
+        label: "Hediye Çekleri"
+        file: "data/hediye-tutarlari.json"
+        fields:
+          - label: "Tutarlar"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.amount}} ₺"
+            fields:
+              - { label: "Tutar (₺)", name: "amount", widget: "number", value_type: "int" }
+              - { label: "Açıklama", name: "note", widget: "string" }

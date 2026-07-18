@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "amount": 1000,
+      "note": "Küçük ölçekli fine line ya da minimal çalışmalar için ideal."
+    },
+    {
+      "amount": 2500,
+      "note": "Orta ölçekli tasarımlar ve detaylı çalışmalar için önerilen tutar."
+    },
+    {
+      "amount": 5000,
+      "note": "Dark Realism ve büyük ölçekli özel tasarımlar için."
+    }
+  ]
+}

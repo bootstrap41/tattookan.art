@@ -22,6 +22,19 @@ document.addEventListener("DOMContentLoaded", () => {
   let tattoos = [];
   let dailyCampaigns = [];
 
+  // Ayarlar yüklenene kadar (ya da yüklenemezse) kullanılacak varsayılanlar
+  let siteSettings = {
+    whatsappNumber: "905388746412",
+    workingHoursText: "10:00 - 23:00",
+    campaignRates: {
+      "dark-realism": 25,
+      "fine-line": 20,
+      minimal: 15,
+      "cover-up": 25,
+      mandala: 20,
+    },
+  };
+
   const grid = document.getElementById("tattoo-grid");
 
   const categories = [
@@ -277,12 +290,79 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Portfolyo JSON yükleme
+  function renderFAQ(items) {
+    const faqAccordion = document.getElementById("faqAccordion");
 
-  fetch("./data/tattoos.json")
-    .then((response) => response.json())
+    if (!faqAccordion) return;
 
-    .then((data) => {
+    faqAccordion.innerHTML = items
+      .map((item, index) => {
+        const headingId = `faqHeading${index}`;
+        const collapseId = `faqCollapse${index}`;
+
+        return `
+          <div class="accordion-item bg-transparent border-0 mb-3">
+            <h3 class="accordion-header" id="${headingId}">
+              <button class="accordion-button collapsed custom-faq-btn" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
+                ${item.question}
+              </button>
+            </h3>
+            <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headingId}" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted small-text">
+                ${item.answer}
+              </div>
+            </div>
+          </div>`;
+      })
+      .join("");
+  }
+
+  function renderReviews(items) {
+    const reviewsGrid = document.getElementById("reviewsGrid");
+
+    if (!reviewsGrid) return;
+
+    reviewsGrid.innerHTML = items
+      .map(
+        (item) => `
+        <div class="col-md-4">
+          <div class="review-card${item.featured ? " featured-card" : ""}">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"${item.text}"</p>
+            <h5 class="client-name">- ${item.name}</h5>
+          </div>
+        </div>`,
+      )
+      .join("");
+  }
+
+  // Site ayarları, FAQ, yorumlar ve portfolyo JSON yükleme
+
+  Promise.all([
+    fetch("./data/tattoos.json").then((r) => r.json()),
+    fetch("./data/settings.json")
+      .then((r) => r.json())
+      .catch(() => null),
+    fetch("./data/faq.json")
+      .then((r) => r.json())
+      .catch(() => null),
+    fetch("./data/yorumlar.json")
+      .then((r) => r.json())
+      .catch(() => null),
+  ])
+    .then(([data, settingsData, faqData, reviewsData]) => {
+      if (settingsData) {
+        siteSettings = { ...siteSettings, ...settingsData };
+      }
+
+      if (faqData && faqData.items) {
+        renderFAQ(faqData.items);
+      }
+
+      if (reviewsData && reviewsData.items) {
+        renderReviews(reviewsData.items);
+      }
+
       // style ve reference artık JSON'da tutulmaz.
       // Kategori ve görsel dosya adından otomatik üretilir.
       const normalizedData = data.models.map(normalizeTattoo);
@@ -378,16 +458,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Kategoriye göre SABİT günlük kampanya indirim oranları.
-  const CATEGORY_CAMPAIGN_RATES = {
-    "dark-realism": 25,
-    "fine-line": 20,
-    minimal: 15,
-    "cover-up": 25,
-    mandala: 20,
-  };
-
   function getCampaignRate(category) {
-    return CATEGORY_CAMPAIGN_RATES[category] || 20;
+    return siteSettings.campaignRates[category] || 20;
   }
 
   // item.basePrice, normal indirim (item.discount) ZATEN uygulanmış olan
@@ -637,7 +709,7 @@ Detayları Gör
 
 <a
 
-href="https://wa.me/905388746412?text=${encodeURIComponent(`Merhaba ${item.reference} kodlu ${item.style} çalışması hakkında bilgi almak istiyorum.`)}"
+href="https://wa.me/${siteSettings.whatsappNumber}?text=${encodeURIComponent(`Merhaba ${item.reference} kodlu ${item.style} çalışması hakkında bilgi almak istiyorum.`)}"
 
 target="_blank"
 
@@ -893,7 +965,7 @@ ${
       : `Merhaba "${itemReference}" çalışması için bilgi almak istiyorum.`;
 
     document.getElementById("lightboxWhatsapp").href =
-      `https://wa.me/905388746412?text=${encodeURIComponent(whatsappMessage)}`;
+      `https://wa.me/${siteSettings.whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
     const aiMessage = encodeURIComponent(
       `Merhaba Tattookan.art,
 
@@ -908,7 +980,7 @@ Teşekkür ederim.`,
     );
 
     document.getElementById("aiDesignRequest").href =
-      `https://wa.me/905388746412?text=${aiMessage}`;
+      `https://wa.me/${siteSettings.whatsappNumber}?text=${aiMessage}`;
 
     const modal = new bootstrap.Modal(document.getElementById("lightboxModal"));
 

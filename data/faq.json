@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "question": "Dövme fiyatları neye göre belirlenir?",
+      "answer": "Dövme fiyatlandırması; tasarımın boyutuna, detay seviyesine, kullanılacak tarza (Fine Line, Minimal, Dark Sketch, Realizm vb.) ve dövmenin yapılacağı vücut bölgesine göre değişiklik gösterir. Kişiye özel tasarımlar için ön görüşme sonrası net bir fiyatlandırma çıkartılır."
+    },
+    {
+      "question": "Randevuya gelmeden önce nelere dikkat etmeliyim?",
+      "answer": "Randevu gününden önceki gece iyi uyumuş ve dinlenmiş olmanız önemlidir. Randevuya kesinlikle aç gelmemelisiniz; kan şekerinizin dengede olması acı eşiğinizi artırır. Ayrıca işlemden önceki 24 saat boyunca alkol veya kan sulandırıcı ilaçlar tüketmemeniz gerekir."
+    },
+    {
+      "question": "Dövme yaptırmak ne kadar acıtır?",
+      "answer": "Acı hissi tamamen kişinin kendi acı eşiğine ve dövmenin yapılacağı bölgeye bağlıdır. Genellikle kemikli bölgeler (kaburga, omurga, bilek içleri) etli bölgelere (kolun dışı, üst bacak) kıyasla daha hassastır. Profesyonel ekipman ve doğru teknikler sayesinde bu süreç oldukça konforlu geçmektedir."
+    }
+  ]
+}

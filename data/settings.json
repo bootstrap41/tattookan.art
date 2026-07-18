@@ -1,0 +1,11 @@
+{
+  "whatsappNumber": "905388746412",
+  "workingHoursText": "10:00 - 23:00",
+  "campaignRates": {
+    "dark-realism": 25,
+    "fine-line": 20,
+    "minimal": 15,
+    "cover-up": 25,
+    "mandala": 20
+  }
+}

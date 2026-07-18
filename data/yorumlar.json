@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "name": "Caner Yılmaz",
+      "text": "Çizgilerdeki işçilik gerçekten muazzam. İlk dövmem olduğu için çok heyecanlıydım ama sterilizasyon ve ekibin profesyonelliği beni çok rahatlattı. Kesinlikle İzmit'teki en iyi stüdyo.",
+      "featured": false
+    },
+    {
+      "name": "Merve Demir",
+      "text": "Kafamdaki karmaşık tasarımı tam istediğim gibi harika bir sanat eserine dönüştürdüler. İlgi, alaka ve stüdyonun o premium atmosferi harikaydı. Emeğinize sağlık, favori mekanım artık.",
+      "featured": true
+    },
+    {
+      "name": "Burak Kaya",
+      "text": "Hijyen konusunda 10 numara, içerisi ameliyathane gibi temiz. Tarzları, tasarımları ve dövme bittikten sonraki bakım süreçlerini tek tek anlatmaları harika bir profesyonellik göstergesi.",
+      "featured": false
+    }
+  ]
+}
