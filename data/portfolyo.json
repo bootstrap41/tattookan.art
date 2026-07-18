@@ -1,3 +1,49 @@
 {
-  "items": []
+  "items": [
+    {
+      "name": "Baba Çocuk Silüet Anlamlı Sırt Dövmesi",
+      "images": ["assets/images/uploads/baba-cocuk-siluet-anlamli-sirt-dovmesi.webp"],
+      "description": ""
+    },
+    {
+      "name": "Chicano Kadın Portresi Ön Kol Dövmesi",
+      "images": ["assets/images/uploads/chicano-kadin-portresi-on-kol-dovmesi.webp"],
+      "description": ""
+    },
+    {
+      "name": "İstiridye İnci Minimal Dövmesi",
+      "images": ["assets/images/uploads/istiridye-inci-minimal-dovmesi.webp"],
+      "description": ""
+    },
+    {
+      "name": "Kırlangıç Kuşları El Üstü Dövmesi",
+      "images": ["assets/images/uploads/kirlangic-kuslari-el-ustu-dovmesi.webp"],
+      "description": ""
+    },
+    {
+      "name": "LadyJustice Realism Kol Dövmesi",
+      "images": ["assets/images/uploads/lady-justice-realism-kol-dovmesi.webp"],
+      "description": "Lady Justice figürünü gotik vitray desenleri ve gerçekçi portre tekniğiyle buluşturan bu etkileyici kol dövmesi; adalet, tarafsızlık, güç ve kararlılığı simgeliyor. Omuz ve üst kol bölgesine uygulanan bu black and grey realism çalışma, yüksek detay seviyesi, yumuşak gölgelendirmeleri ve mimari arka planıyla dikkat çekiyor."
+    },
+    {
+      "name": "Melek Kanatları Burç Pusulası Ön Kol Dövmesi",
+      "images": ["assets/images/uploads/melek-kanatlari-burc-pusulasi-on-kol-dovmesi.webp"],
+      "description": ""
+    },
+    {
+      "name": "Minimal Boyun Yazı Dövmesi",
+      "images": ["assets/images/uploads/minimal-boyun-yazi-dovmesi.webp"],
+      "description": ""
+    },
+    {
+      "name": "Minimal Kaligrafi Ön Kol Yazı Dövmesi",
+      "images": ["assets/images/uploads/minimal-kaligrafi-on-kol-yazi-dovmesi.webp"],
+      "description": "Akıcı kaligrafi çizgileri ve modern blackwork tarzıyla tasarlanan bu ön kol yazı dövmesi, güçlü tipografik görünümüyle dikkat çekiyor. Büyük ölçekli harf formu, kalın siyah çizgiler ve sanatsal kompozisyon sayesinde kişisel anlam taşıyan isim, kelime veya motto tasarımları için ilham veriyor."
+    },
+    {
+      "name": "Spartan Savaşçısı Realism Ön Kol Dövmesi",
+      "images": ["assets/images/uploads/spartan-savascisi-realism-on-kol-dovmesi.webp"],
+      "description": "Spartan savaşçısını güçlü siyah gri gölgelendirmelerle ön kola taşıyan bu realism dövme tasarımı; cesaret, disiplin, onur ve mücadele ruhunu simgeliyor. Antik Yunan miğferi, detaylı zırh işçiliği ve yüksek kontrastlı black and grey tekniği sayesinde dikkat çekici ve maskülen bir görünüm sunuyor."
+    }
+  ]
 }
