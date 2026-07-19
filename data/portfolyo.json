@@ -1,6 +1,14 @@
 {
   "items": [
     {
+      "name": "antik-misir-dark-realism-sleeve-kol-dovmesi",
+      "images": [
+        "assets/images/uploads/dr-001-antik-misir-dark-realism-sleeve-kol-dovmesi.webp",
+        "assets/images/uploads/dr-002-dark-realism-antik-misir-on-kol-dovmesi.webp"
+      ],
+      "description": "Antik Mısır'ın gizemli atmosferini  yansıtan bu tam kol dövmesi; firavun maskesi, kuru kafa, kobra yılanı, Anubis, Horus' un Gözü, hiyeroglif yazılar ve antik Mısır figürlerini etkileyici bir kompozisyonda buluşturuyor. "
+    },
+    {
       "name": "Atlas Yunan Tanrisi Dovmesi",
       "images": [
         "assets/images/uploads/atlas-yunan-tanrisi-dovmesi.webp"
@@ -69,14 +77,6 @@
         "assets/images/uploads/spartan-savascisi-realism-on-kol-dovmesi.webp"
       ],
       "description": "Spartan savaşçısını güçlü siyah gri gölgelendirmelerle ön kola taşıyan bu realism dövme tasarımı; cesaret, disiplin, onur ve mücadele ruhunu simgeliyor. Antik Yunan miğferi, detaylı zırh işçiliği ve yüksek kontrastlı black and grey tekniği sayesinde dikkat çekici ve maskülen bir görünüm sunuyor."
-    },
-    {
-      "name": "antik-misir-dark-realism-sleeve-kol-dovmesi",
-      "images": [
-        "assets/images/uploads/dr-001-antik-misir-dark-realism-sleeve-kol-dovmesi.webp",
-        "assets/images/uploads/dr-002-dark-realism-antik-misir-on-kol-dovmesi.webp"
-      ],
-      "description": "Antik Mısır'ın gizemli atmosferini  yansıtan bu tam kol dövmesi; firavun maskesi, kuru kafa, kobra yılanı, Anubis, Horus' un Gözü, hiyeroglif yazılar ve antik Mısır figürlerini etkileyici bir kompozisyonda buluşturuyor. "
     }
   ]
 }
