@@ -1683,3 +1683,56 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
 if (window.location.hash) {
   scrollToHashWithCorrection(window.location.hash);
 }
+
+// ========================= //
+// SİTEYİ PAYLAŞ BUTONU
+// ========================= //
+(function () {
+  const shareBtn = document.getElementById("siteShareBtn");
+  if (!shareBtn) return;
+
+  function showShareToast(message) {
+    let toast = document.querySelector(".share-toast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.className = "share-toast";
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(toast._hideTimer);
+    toast._hideTimer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2500);
+  }
+
+  shareBtn.addEventListener("click", async () => {
+    const shareData = {
+      title: "Tattookan.art | İzmit Dövme Stüdyosu",
+      text: "Tattookan.art - İzmit'in premium dövme stüdyosu. Kişiye özel tasarımlar ve randevu için siteye göz at.",
+      url: "https://tattookanart.com/",
+    };
+
+    // Mobil cihazlarda (Web Share API destekleniyorsa) native paylaşım menüsünü aç
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        // Kullanıcı paylaşımı iptal ettiyse sessizce geç
+        if (err && err.name !== "AbortError") {
+          console.error("Paylaşım hatası:", err);
+        }
+      }
+      return;
+    }
+
+    // Web Share API yoksa (çoğunlukla masaüstü tarayıcılar): linki panoya kopyala
+    try {
+      await navigator.clipboard.writeText(shareData.url);
+      showShareToast("Site linki kopyalandı");
+    } catch (err) {
+      // Panoya erişim de başarısız olursa kullanıcıya linki göster
+      window.prompt("Linki kopyalamak için Ctrl+C tuşlayın:", shareData.url);
+    }
+  });
+})();
