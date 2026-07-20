@@ -321,26 +321,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!faqAccordion) return;
 
-    faqAccordion.innerHTML = items
-      .map((item, index) => {
-        const headingId = `faqHeading${index}`;
-        const collapseId = `faqCollapse${index}`;
+    const FAQ_INITIAL_COUNT = 6;
 
-        return `
-          <div class="accordion-item bg-transparent border-0 mb-3">
-            <h3 class="accordion-header" id="${headingId}">
-              <button class="accordion-button collapsed custom-faq-btn" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
-                ${item.question}
-              </button>
-            </h3>
-            <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headingId}" data-bs-parent="#faqAccordion">
-              <div class="accordion-body text-muted small-text">
-                ${item.answer}
-              </div>
+    function buildFaqItem(item, index) {
+      const headingId = `faqHeading${index}`;
+      const collapseId = `faqCollapse${index}`;
+
+      return `
+        <div class="accordion-item bg-transparent border-0 mb-3">
+          <h3 class="accordion-header" id="${headingId}">
+            <button class="accordion-button collapsed custom-faq-btn" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
+              ${item.question}
+            </button>
+          </h3>
+          <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headingId}" data-bs-parent="#faqAccordion">
+            <div class="accordion-body text-muted small-text">
+              ${item.answer}
             </div>
-          </div>`;
-      })
-      .join("");
+          </div>
+        </div>`;
+    }
+
+    const visibleItems = items.slice(0, FAQ_INITIAL_COUNT);
+    const hiddenItems = items.slice(FAQ_INITIAL_COUNT);
+
+    let html = visibleItems.map((item, index) => buildFaqItem(item, index)).join("");
+
+    if (hiddenItems.length > 0) {
+      html += `<div id="faqHiddenItems" style="display:none;">`;
+      html += hiddenItems
+        .map((item, index) => buildFaqItem(item, index + FAQ_INITIAL_COUNT))
+        .join("");
+      html += `</div>`;
+      html += `
+        <div class="text-center mt-2">
+          <button type="button" id="faqShowMoreBtn" class="btn ai-design-btn btn-sm">
+            Tüm Soruları Gör (+${hiddenItems.length})
+          </button>
+        </div>`;
+    }
+
+    faqAccordion.innerHTML = html;
+
+    const faqShowMoreBtn = document.getElementById("faqShowMoreBtn");
+
+    if (faqShowMoreBtn) {
+      faqShowMoreBtn.addEventListener("click", () => {
+        document.getElementById("faqHiddenItems").style.display = "block";
+        faqShowMoreBtn.style.display = "none";
+      });
+    }
 
     injectFAQSchema(items);
   }
@@ -378,18 +408,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!reviewsGrid) return;
 
-    reviewsGrid.innerHTML = items
-      .map(
-        (item) => `
+    const REVIEWS_INITIAL_COUNT = 6;
+
+    function buildReviewCard(item) {
+      return `
         <div class="col-md-4">
           <div class="review-card${item.featured ? " featured-card" : ""}">
             <div class="review-stars">★★★★★</div>
             <p class="review-text">"${item.text}"</p>
             <h5 class="client-name">- ${item.name}</h5>
           </div>
-        </div>`,
-      )
-      .join("");
+        </div>`;
+    }
+
+    const visibleItems = items.slice(0, REVIEWS_INITIAL_COUNT);
+    const hiddenItems = items.slice(REVIEWS_INITIAL_COUNT);
+
+    let html = visibleItems.map((item) => buildReviewCard(item)).join("");
+
+    if (hiddenItems.length > 0) {
+      html += `<div class="col-12"><div id="reviewsHiddenItems" class="row g-4 justify-content-center" style="display:none;">`;
+      html += hiddenItems.map((item) => buildReviewCard(item)).join("");
+      html += `</div></div>`;
+      html += `
+        <div class="col-12 text-center mt-3">
+          <button type="button" id="reviewsShowMoreBtn" class="btn ai-design-btn btn-sm">
+            Tüm Yorumları Gör (+${hiddenItems.length})
+          </button>
+        </div>`;
+    }
+
+    reviewsGrid.innerHTML = html;
+
+    const reviewsShowMoreBtn = document.getElementById("reviewsShowMoreBtn");
+
+    if (reviewsShowMoreBtn) {
+      reviewsShowMoreBtn.addEventListener("click", () => {
+        document.getElementById("reviewsHiddenItems").style.display = "flex";
+        reviewsShowMoreBtn.style.display = "none";
+      });
+    }
   }
 
   // Site ayarları, FAQ, yorumlar ve portfolyo JSON yükleme
