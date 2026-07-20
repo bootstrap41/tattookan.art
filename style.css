@@ -1860,3 +1860,30 @@ footer .copyright a:hover {
         right: 20px;
     }
 }
+
+/* ========================= */
+/* PORTFOLYO KART PAYLAŞ BUTONU */
+/* ========================= */
+
+.portfolyo-share-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    z-index: 5;
+    transition: 0.3s;
+}
+
+.portfolyo-share-btn:hover {
+    background: var(--gold);
+    color: #000;
+}
