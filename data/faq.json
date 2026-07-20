@@ -1,6 +1,10 @@
 {
   "items": [
     {
+      "question": "Dövme yaptırmak için yaş sınırı var mı?",
+      "answer": "Yasal düzenlemeler gereği yalnızca 18 yaşını doldurmuş kişilere dövme yapılmaktadır."
+    },
+    {
       "question": "Dövme fiyatları neye göre belirlenir?",
       "answer": "Dövme fiyatlandırması; tasarımın boyutuna, detay seviyesine, kullanılacak tarza (Fine Line, Minimal, Dark Sketch, Realizm vb.) ve dövmenin yapılacağı vücut bölgesine göre değişiklik gösterir. Kişiye özel tasarımlar için ön görüşme sonrası net bir fiyatlandırma çıkartılır."
     },
@@ -11,6 +15,182 @@
     {
       "question": "Dövme yaptırmak ne kadar acıtır?",
       "answer": "Acı hissi tamamen kişinin kendi acı eşiğine ve dövmenin yapılacağı bölgeye bağlıdır. Genellikle kemikli bölgeler (kaburga, omurga, bilek içleri) etli bölgelere (kolun dışı, üst bacak) kıyasla daha hassastır. Profesyonel ekipman ve doğru teknikler sayesinde bu süreç oldukça konforlu geçmektedir."
+    },
+    {
+      "question": "Dövme ne kadar sürede iyileşir?",
+      "answer": "İlk iyileşme süreci ortalama 2-3 hafta sürerken, cildin tamamen yenilenmesi yaklaşık 4-6 haftayı bulabilir. Bu süreçte bakım talimatlarına uymak dövmenin kalıcılığı ve görünümü açısından büyük önem taşır."
+    },
+    {
+      "question": "Dövme sonrası bakım nasıl yapılmalıdır?",
+      "answer": "İlk günlerde dövmeyi temiz ve nemli tutmanız gerekir. Dövmeyi önerilen bakım kremiyle düzenli olarak nemlendirmeli, kabukları koparmamalı ve iyileşme tamamlanana kadar havuz, deniz ve saunadan uzak durmalısınız."
+    },
+    {
+      "question": "Dövme yaptırdıktan sonra duş alabilir miyim?",
+      "answer": "Evet. Ilık suyla kısa süreli duş alabilirsiniz. Ancak ilk birkaç hafta boyunca dövmeyi uzun süre suya maruz bırakmamalı, kese veya lif kullanmamalısınız."
+    },
+    {
+      "question": "Dövme yaptırdıktan sonra güneşe çıkabilir miyim?",
+      "answer": "İlk iyileşme sürecinde doğrudan güneş ışığından kaçınmanız gerekir. İyileştikten sonra ise dövmenin renklerini koruyabilmek için yüksek koruma faktörlü güneş kremi kullanmanız önerilir."
+    },
+    {
+      "question": "Dövme silinebilir mi?",
+      "answer": "Evet. Dövmeler lazer teknolojisi ile büyük oranda silinebilmektedir. Ancak silme işlemi dövmenin rengine, yoğunluğuna ve yaşına göre birden fazla seans gerektirebilir."
+    },
+    {
+      "question": "Cover Up dövme nedir?",
+      "answer": "Cover Up, eski veya beğenilmeyen dövmenin yeni bir tasarımla kapatılması işlemidir. Eski dövmenin rengi, yoğunluğu ve boyutuna göre en uygun tasarım planlanır."
+    },
+    {
+      "question": "Kendi tasarımımla dövme yaptırabilir miyim?",
+      "answer": "Elbette. Kendi çiziminizi veya fikirlerinizi getirebilir, profesyonel dokunuşlarla size özel bir tasarım oluşturabiliriz."
+    },
+    {
+      "question": "Dövme öncesinde alkol tüketebilir miyim?",
+      "answer": "Hayır. İşlemden en az 24 saat önce alkol tüketilmemesi önerilir. Alkol kanı sulandırabileceği için işlem sırasında kanamayı artırabilir."
+    },
+    {
+      "question": "Dövme öncesinde spor yapılabilir mi?",
+      "answer": "Yoğun egzersizlerden kaçınmanız tavsiye edilir. Dinlenmiş bir vücut, dövme işlemini daha konforlu geçirmenizi sağlar."
+    },
+    {
+      "question": "Dövme sonrası spor yapabilir miyim?",
+      "answer": "İlk 3-5 gün ağır spor yapılmaması önerilir. Aşırı terleme dövmenin iyileşme sürecini olumsuz etkileyebilir."
+    },
+    {
+      "question": "Dövme sonrası denize veya havuza girebilir miyim?",
+      "answer": "Hayır. Dövme tamamen iyileşene kadar deniz, havuz, jakuzi ve sauna gibi ortamlardan uzak durmanız gerekir."
+    },
+    {
+      "question": "Dövme ne kadar kalıcıdır?",
+      "answer": "Profesyonel ekipman ve kaliteli mürekkepler kullanılarak yapılan dövmeler ömür boyu kalıcıdır. Zamanla hafif solmalar yaşanabilir ve istenirse rötuş yapılabilir."
+    },
+    {
+      "question": "Dövme renkleri zamanla solar mı?",
+      "answer": "Her dövme yıllar içerisinde doğal olarak bir miktar solabilir. Güneşten korunması ve doğru bakım yapılması dövmenin canlılığını uzun süre korumasını sağlar."
+    },
+    {
+      "question": "Renkli dövme mi siyah dövme mi daha uzun ömürlüdür?",
+      "answer": "Siyah dövmeler genellikle yıllar içerisinde daha net görünümünü korur. Renkli dövmelerde ise kullanılan renklere ve güneşe maruz kalma durumuna göre solma daha belirgin olabilir."
+    },
+    {
+      "question": "Rötuş gerekli olur mu?",
+      "answer": "Bazı dövmelerde iyileşme sonrasında küçük rötuşlar gerekebilir. Bu tamamen cilt yapısına ve iyileşme sürecine bağlıdır."
+    },
+    {
+      "question": "Hamileyken dövme yaptırabilir miyim?",
+      "answer": "Hamilelik ve emzirme döneminde dövme yaptırılması önerilmez. Sağlık açısından işlemin ertelenmesi tavsiye edilir."
+    },
+    {
+      "question": "Hangi dövme tarzlarını yapıyorsunuz?",
+      "answer": "Stüdyomuzda Dark Realism, Fine Line, Minimal, Blackwork, Cover Up, Geometrik, Mandala ve kişiye özel birçok farklı dövme stili uygulanmaktadır."
+    },
+    {
+      "question": "Dövme tasarımı bana özel mi hazırlanıyor?",
+      "answer": "Evet. Her müşterinin isteği, vücut yapısı ve tarzı dikkate alınarak tamamen kişiye özel tasarımlar hazırlanır."
+    },
+    {
+      "question": "Aynı gün hem tasarım hem dövme yapılabilir mi?",
+      "answer": "Uygunluk durumuna göre mümkündür. Büyük ve detaylı projelerde ise öncelikle tasarım süreci planlanır"
+    },
+    {
+      "question": "Dövme yaptırmadan önce uyuşturucu krem kullanılabilir mi?",
+      "answer": "Gerekli durumlarda kullanılabilir ancak bunun mutlaka dövme sanatçısıyla önceden görüşülmesi gerekir. Her cilt tipi için uygun olmayabilir."
+    },
+    {
+      "question": "Dövme işlemi sırasında mola verilebilir mi?",
+      "answer": "Evet. Özellikle uzun süren seanslarda ihtiyaç duyulduğunda kısa molalar verilebilir."
+    },
+    {
+      "question": "Dövme yaptırdıktan sonra işe gidebilir miyim?",
+      "answer": "Çoğu kişi günlük hayatına aynı gün devam edebilir. Ancak fiziksel temasın yoğun olduğu işlerde dövmeyi koruyacak önlemler alınmalıdır"
+    },
+    {
+      "question": "Dövme yaptırmadan önce tüyler alınmalı mı?",
+      "answer": "Hayır. İşlem öncesinde gerekli görülürse bölge stüdyo tarafından hijyenik şekilde hazırlanır."
+    },
+    {
+      "question": "Dövme için nasıl randevu alabilirim?",
+      "answer": "İletişim sayfamız, WhatsApp veya sosyal medya hesaplarımız üzerinden bize ulaşabilir, istediğiniz tasarımı paylaşarak uygun tarih ve saat için kolayca randevu oluşturabilirsiniz."
+    },
+    {
+      "question": "İlk dövme için hangi bölge önerilir?",
+      "answer": "İlk kez dövme yaptıracak kişiler için genellikle ön kol, dış kol, omuz ve baldır gibi daha az hassas bölgeler önerilir. Bu bölgelerde hem acı hissi daha düşüktür hem de iyileşme süreci daha konforlu geçer. Tasarımın boyutuna ve yaşam tarzınıza göre en uygun bölge birlikte belirlenebilir."
+    },
+    {
+      "question": "En az acıyan dövme bölgeleri hangileridir?",
+      "answer": "Kas ve yağ dokusunun yoğun olduğu bölgeler genellikle daha az acı hissedilen alanlardır. Dış ön kol, üst kol, omuz, baldır ve üst bacak dövme yaptırmak için en rahat bölgeler arasında yer alır. Ancak acı hissi kişiden kişiye değişebilir."
+    },
+    {
+      "question": "En çok acıtan dövme bölgeleri hangileridir?",
+      "answer": "Kaburga, omurga, ayak bileği, diz kapağı, dirsek, el parmakları ve göğüs kemiği gibi kemiğe yakın bölgeler daha hassas kabul edilir. Bu bölgelerde sinir yoğunluğu fazla olduğu için acı hissi diğer bölgelere göre daha yüksek olabilir."
+    },
+    {
+      "question": "Dövme kaç seans sürer?",
+      "answer": "Dövmenin boyutu, detay seviyesi ve uygulanacak tekniğe bağlı olarak tek seansta tamamlanabileceği gibi birkaç seansa da bölünebilir. Küçük dövmeler genellikle tek seansta biterken büyük ve detaylı projeler birkaç hafta arayla planlanan seanslar halinde tamamlanır"
+    },
+    {
+      "question": "Küçük dövme ne kadar sürer?",
+      "answer": "Minimal veya küçük dövmeler tasarımın detayına bağlı olarak ortalama 30 dakika ile 2 saat arasında tamamlanmaktadır. Hazırlık ve stencil yerleştirme süresi de bu süreye dahildir."
+    },
+    {
+      "question": "Büyük dövme kaç saatte tamamlanır?",
+      "answer": "Kol kaplama, sırt veya bacak gibi büyük projeler genellikle 4 ila 8 saat süren seanslar halinde uygulanır. Çok detaylı çalışmalar ise birkaç farklı seansta tamamlanabilir."
+    },
+    {
+      "question": "Dövme yaptırmadan önce kahve içilir mi?",
+      "answer": "Aşırı miktarda kafein tüketimi bazı kişilerde heyecanı artırabilir ve cildi daha hassas hale getirebilir. Bu nedenle dövme öncesinde kahve tüketimini sınırlamak ve bol su içmek daha rahat bir deneyim sağlayabilir."
+    },
+    {
+      "question": "Dövme sonrası kaşıntı normal midir?",
+      "answer": "Evet. Kaşıntı, iyileşme sürecinin doğal bir parçasıdır. Dövmeyi kaşımamak ve kabukları koparmamak gerekir. Düzenli nemlendirme yapmak iyileşmeyi destekler ve kaşıntıyı azaltabilir."
+    },
+    {
+      "question": "Dövme neden kabuk bağlar?",
+      "answer": "Dövme uygulaması sırasında cildin üst tabakası yenilenmeye başlar. Bu nedenle ince kabuklanmalar oluşması tamamen normaldir. Kabukların kendiliğinden dökülmesi beklenmeli, kesinlikle koparılmamalıdır."
+    },
+    {
+      "question": "Dövme enfeksiyonu nasıl anlaşılır?",
+      "answer": "İlk günlerde hafif kızarıklık normaldir. Ancak şiddetli ağrı, kötü kokulu akıntı, aşırı şişlik, yüksek ateş veya günler geçmesine rağmen artan kızarıklık enfeksiyon belirtisi olabilir. Böyle bir durumda vakit kaybetmeden sağlık kuruluşuna başvurulmalıdır."
+    },
+    {
+      "question": "İnce çizgi (Fine Line) dövmeler zamanla bozulur mu?",
+      "answer": "Fine Line dövmeler doğru teknikle yapıldığında uzun yıllar estetik görünümünü koruyabilir. Ancak çok ince detaylar zamanla hafif yumuşayabilir. Deneyimli bir dövme sanatçısı tarafından uygulanması ve doğru bakım yapılması bu riski önemli ölçüde azaltır."
+    },
+    {
+      "question": "Minimal dövme uzun yıllar dayanır mı?",
+      "answer": "Evet. Minimal dövmeler kaliteli mürekkep, doğru uygulama ve düzenli güneş korumasıyla uzun yıllar boyunca net görünümünü koruyabilir. Çok küçük detaylar zaman içerisinde hafif değişiklik gösterebilir."
+    },
+    {
+      "question": "Gerçekçi (Realism) dövmeler kaç saatte yapılır?",
+      "answer": "Realism dövmeler yüksek detay içerdiği için diğer tarzlara göre daha uzun sürmektedir. Tasarımın büyüklüğüne bağlı olarak 4 ila 10 saat arasında sürebilir ve bazı projeler birkaç seans gerektirebilir."
+    },
+    {
+      "question": "Eski dövmenin üzerine yeni dövme yapılabilir mi?",
+      "answer": "Evet. Cover Up tekniği sayesinde eski veya beğenilmeyen dövmeler yeni bir tasarımla kapatılabilir. Uygun tasarım seçimi için mevcut dövmenin rengi, yoğunluğu ve boyutu değerlendirilir."
+    },
+    {
+      "question": "Dövme randevusu nasıl iptal edilir veya ertelenir?",
+      "answer": "Randevunuzu mümkün olduğunca erken haber vererek kolayca iptal edebilir veya farklı bir tarihe erteleyebilirsiniz. Planlama açısından en az 24-48 saat önceden bilgi verilmesi önerilir."
+    },
+    {
+      "question": "Dövme yaptırmadan önce yemek yemek gerekir mi?",
+      "answer": "Evet. Dövme öncesinde hafif ama doyurucu bir öğün tüketmek kan şekerinin dengede kalmasına yardımcı olur ve uzun süren işlemlerde kendinizi daha rahat hissetmenizi sağlar."
+    },
+    {
+      "question": "Dövme yaptırdıktan sonra güneşlenebilir miyim?",
+      "answer": "Hayır. Yeni yapılan dövmeler doğrudan güneş ışığına maruz bırakılmamalıdır. İyileşme tamamlandıktan sonra ise dövmenin rengini korumak için yüksek koruma faktörlü güneş kremi kullanılması tavsiye edilir."
+    },
+    {
+      "question": "Dövme yaptırdıktan sonra çalışabilir miyim?",
+      "answer": "Çoğu kişi dövme yaptırdıktan sonra günlük yaşamına devam edebilir. Ancak yoğun fiziksel temas, aşırı terleme veya kirli çalışma ortamı bulunan işlerde dövmenin korunmasına dikkat edilmelidir."
+    },
+    {
+      "question": "Dövme yaptırmak sağlığa zararlı mı?",
+      "answer": "Steril ekipman, tek kullanımlık iğneler ve kaliteli mürekkepler kullanılarak profesyonel bir stüdyoda yapılan dövmeler güvenlidir. Hijyen kurallarına uyulması ve bakım talimatlarının uygulanması büyük önem taşır."
+    },
+    {
+      "question": "Dövme yaptırmak için en uygun mevsim hangisidir?",
+      "answer": "Dövme yılın her döneminde yaptırılabilir. Ancak sonbahar ve kış aylarında güneş, deniz ve yoğun terleme daha az olduğu için iyileşme süreci genellikle daha rahat geçmektedir. Yaz aylarında ise bakım kurallarına ekstra dikkat edilmelidir."
     }
   ]
 }
