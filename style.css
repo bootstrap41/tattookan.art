@@ -1817,54 +1817,46 @@ footer .copyright a:hover {
 }
 
 /* ========================= */
-/* SİTEYİ PAYLAŞ BUTONU (navbar) */
+/* YÜZEN (SÜRÜKLENEBİLİR) PAYLAŞ BUTONU */
 /* ========================= */
-.site-share-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    margin-right: 8px;
-    border: 1px solid rgba(212, 175, 55, 0.4);
-    border-radius: 50%;
-    background: transparent;
-    color: var(--gold);
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
-}
 
-.site-share-btn:hover {
-    background: rgba(212, 175, 55, 0.12);
-    box-shadow: 0 0 14px rgba(212, 175, 55, 0.35);
-}
-
-.site-share-btn:active {
-    transform: scale(0.94);
-}
-
-/* Paylaşım sonrası küçük onay bildirimi (toast) */
-.share-toast {
+.share-float-btn {
     position: fixed;
-    left: 50%;
-    bottom: 30px;
-    transform: translateX(-50%) translateY(20px);
-    background: linear-gradient(135deg, #111, #1c1c1c);
-    border: 1px solid var(--gold);
-    color: var(--text-main);
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-    z-index: 999999;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    bottom: 170px;
+    right: 30px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #111, #222);
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    z-index: 1000;
+    cursor: grab;
+    touch-action: none;
+    transition: box-shadow 0.2s, transform 0.2s;
+    padding: 0;
 }
 
-.share-toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
+.share-float-btn:hover {
+    box-shadow: 0 0 20px rgba(212,175,55,.5);
+}
+
+.share-float-btn:active {
+    cursor: grabbing;
+    transform: scale(1.05);
+}
+
+@media (max-width: 576px) {
+    .share-float-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+        bottom: 150px;
+        right: 20px;
+    }
 }
